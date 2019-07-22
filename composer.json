@@ -1,0 +1,11 @@
+{
+    "name": "chenxin/phalcon-test",
+    "authors": [
+        {
+            "name": "chenxin",
+            "email": "chen.xin@hbtown.com"
+        }
+    ],
+    "require": {
+    }
+}
