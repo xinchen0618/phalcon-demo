@@ -3,7 +3,7 @@
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/../phalcon-devtools/ide/3.4.2/Phalcon" />
+      <path value="$PROJECT_DIR$/../phalcon-devtools/ide/3.4.4/Phalcon" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

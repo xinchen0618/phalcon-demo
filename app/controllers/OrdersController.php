@@ -6,7 +6,6 @@ class OrdersController extends Controller
 {
     public function index(): void
     {
-        foo();
         echo "list \n";
     }
 

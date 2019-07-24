@@ -3,17 +3,6 @@
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 
-function return_exception($e) {
-    global $app;
-    $data['status'] = 'Exception';
-    if ('prod' == getenv('RUNTIME_ENVIRONMENT')) {
-        $data['message'] = '服务异常，请稍后重试';
-    } else {
-        $data['message'] = $e->getMessage() . '. ' . $e->getTraceAsString();
-    }
-    $app->response->setStatusCode(500)->setJsonContent($data)->send();
-}
-
 // 错误提示转Exception
 function exception_error_handler($severity, $message, $file, $line) {
     if (!(error_reporting() & $severity)) {
@@ -22,12 +11,6 @@ function exception_error_handler($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
 set_error_handler('exception_error_handler');
-
-// 未被catch捕获的错误转Exception
-function exception_handler($e) {
-    return_exception($e);
-}
-set_exception_handler('exception_handler');
 
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
@@ -73,6 +56,12 @@ try {
      */
     $app->handle();
 
-} catch (\Exception $e) {
-    return_exception($e);
+} catch (\Throwable $e) {
+    $data['status'] = 'Exception';
+    if ('prod' == getenv('RUNTIME_ENVIRONMENT')) {
+        $data['message'] = '服务异常，请稍后重试';
+    } else {
+        $data['message'] = $e->getMessage() . '. ' . $e->getTraceAsString();
+    }
+    $app->response->setStatusCode(500)->setJsonContent($data)->send();
 }
