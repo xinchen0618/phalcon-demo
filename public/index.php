@@ -57,11 +57,8 @@ try {
     $app->handle();
 
 } catch (\Throwable $e) {
-    $data['status'] = 'Exception';
-    if ('prod' == getenv('RUNTIME_ENVIRONMENT')) {
-        $data['message'] = '服务异常，请稍后重试';
-    } else {
-        $data['message'] = $e->getMessage() . '. ' . $e->getTraceAsString();
-    }
-    $app->response->setStatusCode(500)->setJsonContent($data)->send();
+    $app->response->setStatusCode(500)->setJsonContent([
+        'status' => 'Exception',
+        'message' => 'prod' == getenv('RUNTIME_ENVIRONMENT') ? '服务异常，请稍后重试' : $e->getMessage() . '. ' . $e->getTraceAsString()
+    ])->send();
 }
