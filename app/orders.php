@@ -34,9 +34,9 @@ $orders->setPrefix('/order/v1');
  *     }
  */
 $orders->get('/orders', 'index');
-$orders->get('/orders/{orderId:[0-9]+}', 'detail');
-$orders->post('/orders', 'add');
-$orders->put('/orders/{orderId:[0-9]+}', 'update');
+$orders->post('/orders', 'post');
+$orders->get('/orders/{orderId:[0-9]+}', 'get');
+$orders->put('/orders/{orderId:[0-9]+}', 'put');
 $orders->delete('/orders/{orderId:[0-9]+}', 'delete');
 
 $app->mount($orders);
