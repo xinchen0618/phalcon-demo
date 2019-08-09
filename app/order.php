@@ -12,13 +12,14 @@ $orders->setPrefix('/order/v1');
 
 /**
  * @api {get} /orders 订单列表
+ * @apiVersion 1.0.0
  * @apiGroup Order
- * @apiDescription 获取订单列表
+ * @apiDescription 订单列表
  *
  * @apiSuccess {String} firstname Firstname of the User.
  * @apiSuccess {String} lastname  Lastname of the User.
  *
- * @apiSuccessExample Success-Response:
+ * @apiSuccessExample Success Response Example
  *  HTTP/1.1 200 OK
  *  {
  *    "firstname": "John",
