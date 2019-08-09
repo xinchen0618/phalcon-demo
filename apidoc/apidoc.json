@@ -5,6 +5,6 @@
   "title": "Custom apiDoc browser title",
   "header": {
     "title": "使用前必读",
-    "filename": "header.md"
+    "filename": "apidoc/header.md"
   }
 }
