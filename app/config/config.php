@@ -5,11 +5,11 @@
  */
 
 return new \Phalcon\Config([
-    'database' => [
-        'adapter'    => 'Mysql',
-        'host'       => 'localhost',
+    'mysql' => [
+        'host'       => '127.0.0.1',
+        'port'       => 3306,
         'username'   => 'root',
-        'password'   => '',
+        'password'   => 'cx654321',
         'dbname'     => 'test',
         'charset'    => 'utf8',
     ]
