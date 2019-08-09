@@ -2,9 +2,9 @@
 
 use Phalcon\Mvc\Controller;
 
-class OrdersController extends Controller
+class OrderController extends Controller
 {
-    public function index()
+    public function getOrders()
     {
         $items = [
             ['order_id' => 123, 'order_sn' => '196457865432'],
@@ -14,26 +14,26 @@ class OrdersController extends Controller
         return $this->response->setJsonContent(['items' => $items]);
     }
 
-    public function post()
+    public function postOrders()
     {
         $order = ['order_id' => 123, 'order_sn' => '196457865432'];
 
         return $this->response->setStatusCode(201)->setJsonContent($order);
     }
 
-    public function get(int $orderId)
+    public function getOrdersById(int $orderId)
     {
         $order = ['order_id' => $orderId, 'order_sn' => '196457865432'];
 
         return $this->response->setStatusCode(200)->setJsonContent($order);
     }
 
-    public function put(int $orderId)
+    public function putOrdersById(int $orderId)
     {
         return $this->response->setStatusCode(200);
     }
 
-    public function delete(int $orderId)
+    public function deleteOrdersById(int $orderId)
     {
         return $this->response->setStatusCode(204);
     }

@@ -2,9 +2,9 @@
 
 use Phalcon\Mvc\Controller;
 
-class AccountsController extends Controller
+class AccountController extends Controller
 {
-    public function login()
+    public function postLogin()
     {
         $user = ['user_id' => 123, 'user_name' => 'Clarified'];
 

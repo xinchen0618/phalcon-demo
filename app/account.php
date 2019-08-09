@@ -7,9 +7,9 @@
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
 $accounts = new MicroCollection();
-$accounts->setHandler(new AccountsController());
+$accounts->setHandler(new AccountController());
 $accounts->setPrefix('/account/v1');
 
-$accounts->post('/login', 'login');
+$accounts->post('/login', 'postLogin');
 
 $app->mount($accounts);

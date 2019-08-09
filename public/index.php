@@ -48,8 +48,8 @@ try {
      * Include Application
      */
     include APP_PATH . '/app.php';
-    include APP_PATH . '/accounts.php';
-    include APP_PATH . '/orders.php';
+    include APP_PATH . '/account.php';
+    include APP_PATH . '/order.php';
 
     /**
      * Handle the request
