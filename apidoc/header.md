@@ -2,7 +2,7 @@
 
 RESTful, 参考 <a href="https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api" target="_blank">Best Practices for Designing a Pragmatic RESTful API</a>
 
-示例:
+请求示例:
 ```
 curl -X POST \
   https://api.sfll.net/comment/v1/comments \
@@ -33,7 +33,7 @@ X-SFLL-Admin-Token | 否 | 管理端授权token
 
 服务器错误统一返回500, 客户端错误返回4xx
 
-- 示例
+- Response示例
 ```
 HTTP/1.1 404 Not Found
 {
