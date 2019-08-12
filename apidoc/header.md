@@ -49,5 +49,5 @@ Http Status Code | status | message
 500 | Exception | 服务异常，请稍后重试
 404 | ResourceNotFound | 您请求资源不存在
 
-> 测试环境Exception message为异常详细内容
+> 非生产环境Exception message为异常详细内容
 
