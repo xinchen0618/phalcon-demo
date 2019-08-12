@@ -1,6 +1,6 @@
 ### 接口风格
 
-RESTful 参考 https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
+RESTful, 参考 <a href="https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api" target="_blank">Best Practices for Designing a Pragmatic RESTful API</a>
 
 示例:
 ```
