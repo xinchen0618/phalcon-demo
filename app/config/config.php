@@ -12,5 +12,6 @@ return new \Phalcon\Config([
         'password'   => 'cx654321',
         'dbname'     => 'test',
         'charset'    => 'utf8',
+        'options' => [PDO::ATTR_EMULATE_PREPARES => false]
     ]
 ]);
