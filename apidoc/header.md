@@ -2,6 +2,19 @@
 
 RESTful 参考 https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
 
+示例:
+```
+POST /comment/v1/comments HTTP/1.1
+Host: api.sfll.net
+X-SFLL-Token: vuomdg39uevkajtnismb68r407
+Content-Type: application/json
+
+{
+	"order_id":5897,
+	"content":"服务很满意"
+}
+```
+
 ### Endpoint
 
 项目由多个Module组成
