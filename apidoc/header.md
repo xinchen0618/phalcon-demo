@@ -4,9 +4,9 @@ RESTful 参考 https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful
 
 ### Endpoint
 
-项目由多个微服务组成
+项目由多个Module组成
 
-Service | 说明 | Endpoint 
+Module | 说明 | Endpoint 
 ---|---|---
 account | 账号 | https://api.sfll.xyz/account/v1/
 
@@ -16,8 +16,8 @@ account | 账号 | https://api.sfll.xyz/account/v1/
 
 header | 是否必填 | 说明
 ---|---|---
-X-SFLL-Token | 否 | 授权token
-X-SFLL-From | 是 | 请求来源, 当前为固定值sfll-miniprogram
+X-SFLL-Token | 否 | 前端授权token
+X-SFLL-Admin-Token | 否 | 管理端授权token
   
 ### 错误码
 
