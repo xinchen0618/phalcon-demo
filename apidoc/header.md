@@ -4,15 +4,14 @@ RESTful 参考 https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful
 
 示例:
 ```
-POST /comment/v1/comments HTTP/1.1
-Host: api.sfll.net
-X-SFLL-Token: vuomdg39uevkajtnismb68r407
-Content-Type: application/json
-
-{
-	"order_id":5897,
-	"content":"服务很满意"
-}
+curl -X POST \
+  https://api.sfll.net/comment/v1/comments \
+  -H 'Content-Type: application/json' \
+  -H 'X-SFLL-Token: vuomdg39uevkajtnismb68r407' \
+  -d '{
+	"order_id": 62,
+	"content": "服务很满意"
+}'
 ```
 
 ### Endpoint
