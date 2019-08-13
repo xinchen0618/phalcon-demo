@@ -2,7 +2,7 @@
 
 RESTful, 参考 <a href="https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api" target="_blank">Best Practices for Designing a Pragmatic RESTful API</a>
 
-请求示例:
+接口请求示例:
 ```
 curl -X POST \
   https://api.sfll.net/comment/v1/comments \
@@ -14,13 +14,24 @@ curl -X POST \
 }'
 ```
 
-### 访问域名Endpoint
 
-环境 | Endpoint
+### Endpoint
+
+- 域名
+
+环境 | 域名
 ---|---
 生产 | https://api.sfll.xyz
 测试 | https://api-testing.sfll.xyz
-开发 | https://api-dev.sfll.xyz
+
+- Module
+
+项目由多Module组成, Module均单独维护版本
+
+Module | 说明 | Path
+---|---|---
+account | 前端账号相关 | /account/v1
+
 
 ### 自定专用HTTP Headers
 
@@ -28,7 +39,8 @@ Header | 是否必填 | 说明
 ---|---|---
 X-SFLL-Token | 否 | 前端授权token
 X-SFLL-Admin-Token | 否 | 管理端授权token
-  
+
+
 ### 错误码
 
 服务器错误统一返回500, 客户端错误返回4xx
