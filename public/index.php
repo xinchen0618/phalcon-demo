@@ -48,8 +48,11 @@ try {
      * Include Application
      */
     include APP_PATH . '/app.php';
-    include APP_PATH . '/account.php';
-    include APP_PATH . '/order.php';
+    if (0 === strpos($_SERVER['REQUEST_URI'], '/account/v1')) {
+        include APP_PATH . '/account.php';
+    } elseif (0 === strpos($_SERVER['REQUEST_URI'], '/order/v1')) {
+        include APP_PATH . '/order.php';
+    }
 
     /**
      * Handle the request
