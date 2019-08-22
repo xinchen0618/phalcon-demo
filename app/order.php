@@ -7,7 +7,7 @@
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
 $orders = new MicroCollection();
-$orders->setHandler('OrderController', true);
+$orders->setHandler(new OrderController());
 $orders->setPrefix('/order/v1');
 
 /**
