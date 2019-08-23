@@ -48,11 +48,11 @@ try {
      * Include Application
      */
     include APP_PATH . '/app.php';
+    // dynamic loading
     $routers = [
         '/account/v1' => 'account.php',
         '/order/v1' => 'order.php'
     ];
-    // dynamic loading
     foreach ($routers as $prefix => $router) {
         if (0 === strpos($_SERVER['REQUEST_URI'], $prefix)) {
             include APP_PATH . '/' . $router;
