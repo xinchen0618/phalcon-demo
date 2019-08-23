@@ -4,12 +4,14 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 
 // 错误提示转Exception
-function exception_error_handler($severity, $message, $file, $line) {
+function exception_error_handler($severity, $message, $file, $line)
+{
     if (!(error_reporting() & $severity)) {
         return;
     }
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
+
 set_error_handler('exception_error_handler');
 
 define('BASE_PATH', dirname(__DIR__));
