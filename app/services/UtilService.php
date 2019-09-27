@@ -5,6 +5,21 @@ use Phalcon\Di;
 class UtilService
 {
     /**
+     * 错误返回
+     * @param int $statusCode
+     * @param string $status
+     * @param string $message
+     */
+    public static function errorResponse(int $statusCode, string $status, string $message): void
+    {
+        Di::getDefault()->getResponse()->setStatusCode($statusCode)->setJsonContent([
+            'status' => $status,
+            'message' => $message
+        ])->send();
+        exit;
+    }
+
+    /**
      * 获取非截取异常信息
      * @param Throwable $e
      * @return string
