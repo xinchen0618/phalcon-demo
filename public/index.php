@@ -3,17 +3,6 @@
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 
-// 错误提示转Exception
-function exception_error_handler($severity, $message, $file, $line)
-{
-    if (!(error_reporting() & $severity)) {
-        return;
-    }
-    throw new ErrorException($message, 0, $severity, $file, $line);
-}
-
-set_error_handler('exception_error_handler');
-
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 
@@ -29,11 +18,6 @@ try {
      * Include Services
      */
     include APP_PATH . '/config/services.php';
-
-    /**
-     * Get config service for use in inline setup below
-     */
-    $config = $di->getConfig();
 
     /**
      * Include Autoloader
@@ -68,8 +52,10 @@ try {
     $app->handle();
 
 } catch (\Throwable $e) {
-    $app->response->setStatusCode(500)->setJsonContent([
-        'status' => 'Exception',
-        'message' => 'prod' == getenv('RUNTIME_ENVIRONMENT') ? '服务异常，请稍后重试' : $e->getMessage() . '. ' . $e->getTraceAsString()
-    ])->send();
+    if ($di->getDb()->isUnderTransaction()) {
+        $di->getDb()->rollback();
+    }
+
+    $message = 'prod' === getenv('RUNTIME_ENVIRONMENT') ? '服务异常，请稍后重试' : UtilService::getStringTrace($e);
+    UtilService::errorResponse(500, 'Exception', $message);
 }
