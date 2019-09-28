@@ -25,7 +25,7 @@ class DefaultJob
                 Resque::enqueue('default', 'DefaultJob', ['method' => $method, 'args' => $args, 'tried' => $tried + 1]);
             } else {
                 // 失败，提醒人工干预
-                error_log("消息队列Job执行失败.DefaultJob, method: {$method}" . ($args ? ', args: ' . json_encode($args) : ''));
+                error_log("消息队列Job执行失败. DefaultJob, method: {$method}" . ($args ? ', args: ' . json_encode($args) : ''));
             }
         }
     }
