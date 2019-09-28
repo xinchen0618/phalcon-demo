@@ -30,15 +30,7 @@ $app->notFound(function () use($app) {
 
 
 $app->get('/mysql', function () use ($app) {
-//    $key = 'mysql:instance';
-//    $db = $app->cache->get($key);
-//    if (!$db) {
-//        $mysqlConfig = $app->config->mysql->toArray();
-//        $db = new \Phalcon\Db\Adapter\Pdo\Mysql($mysqlConfig);
-//        $app->cache->save($key, $db, 3600);
-//    }
-
-    $sql = "SELECT * FROM users222";
+    $sql = "SELECT * FROM users";
     $users = $this->db->fetchAll($sql);
 
     return $app->response->setStatusCode(200)->setJsonContent($users);
