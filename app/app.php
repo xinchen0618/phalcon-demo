@@ -37,18 +37,29 @@ $app->get('/mysql', function () use ($app) {
 });
 
 $app->get('/redis', function () use ($app) {
-//    $app->redisA->flushAll();
+    $app->redisA->flushAll();
 
-//    $app->redisA->set('aaa', 123);
-//    $app->redisA->set('bbb', 234);
-//
-//    $app->redisB->set('AAA', 'abc');
-//
-//    var_export($app->redisA->dbSize());
-//    echo "\n";
-//    var_export($app->redisB->dbSize());
+    $app->redisA->set('aaa', 123);
+    $app->redisA->set('bbb', 234);
 
-    var_export($app->redisA->info());
+    $app->redisB->set('AAA', 'abc');
+
+    var_export($app->redisA->dbSize());
     echo "\n";
-    var_export($app->redisA->config('GET', '*'));
+    var_export($app->redisB->dbSize());
+
+//    var_export($app->redisA->info());
+//    echo "\n";
+//    var_export($app->redisA->config('GET', '*'));
+});
+
+$app->post('/queue', function () use ($app) {
+    $redisConfig = $app->config->redis;
+    Resque::setBackend("{$redisConfig->host}:{$redisConfig->port}", 3);
+
+    Resque::enqueue('default', 'DefaultJob', ['method' => 'addUser', 'args' => ['王五']]);
+});
+
+$app->post('/error', function () use ($app) {
+    error_log('error log test.');
 });

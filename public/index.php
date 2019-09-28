@@ -34,7 +34,14 @@ try {
      * Include Application
      */
     include APP_PATH . '/app.php';
-    // dynamic loading
+
+    /**
+     * dynamic loading
+     * example:
+     *      Module: /account/v1
+     *      App: account.php
+     *      Controller: controllers/AccountController.php
+     */
     $routers = [
         '/account/v1' => 'account.php',
         '/order/v1' => 'order.php'
