@@ -1,22 +1,10 @@
 #!/usr/bin/env php
 <?php
 
-use Phalcon\Di\FactoryDefault;
+use Phalcon\Di;
 
-define('BASE_PATH', dirname(__DIR__, 2));
-define('APP_PATH', BASE_PATH . '/app');
-
-/**
- * load framework
- */
-$di = new FactoryDefault();
-include dirname(__DIR__) . '/config/services.php';
-include dirname(__DIR__) . '/config/loader.php';
-
-/**
- * load jobs
- */
-include __DIR__ . '/jobs/DefaultJob.php';
+include __DIR__ . '/init.php';
+include __DIR__ . '/jobs/QueueJob.php';
 
 if (!class_exists('Composer\Autoload\ClassLoader', false)) {
     die(
@@ -37,8 +25,10 @@ if(empty($QUEUE)) {
  *
  * Note: the 'user' part of the DSN URI is required but is not used.
  */
-$redisConfig = $di->getConfig()->redis;
-Resque::setBackend("{$redisConfig->host}:{$redisConfig->port}", 3);
+if (null === Resque::$redis) {
+    $config = Di::getDefault()->get('config');
+    Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+}
 
 $logLevel = false;
 $LOGGING = getenv('LOGGING');
@@ -93,10 +83,10 @@ function cleanup_children($signal){
 if($count > 1) {
 	$children = array();
 	$GLOBALS['send_signal'] = FALSE;
-	
+
 	$die_signals = array(SIGTERM, SIGINT, SIGQUIT);
 	$all_signals = array_merge($die_signals, array(SIGUSR1, SIGUSR2, SIGCONT, SIGPIPE));
-	
+
 	for($i = 0; $i < $count; ++$i) {
 		$pid = Resque::fork();
 		if($pid == -1) {
@@ -120,7 +110,7 @@ if($count > 1) {
 					foreach ($all_signals as $signal) {
 						pcntl_signal($signal,  "cleanup_children");
 					}
-					
+
 					$PIDFILE = getenv('PIDFILE');
 					if ($PIDFILE) {
 						if(file_put_contents($PIDFILE, getmypid()) === false){
@@ -128,19 +118,19 @@ if($count > 1) {
                                                         die(2);
                                                 }
 					}
-					
+
 					$registered = TRUE;
 				}
-				
+
 				if(function_exists('setproctitle')) {
 					setproctitle('resque-' . Resque::VERSION . ": Monitoring {$count} children: [".implode(',', array_keys($children))."]");
 				}
-				
+
 				$childPID = pcntl_waitpid(-1, $childStatus, WNOHANG);
 				if ($childPID != 0) {
 					fwrite(STDOUT, "*** A child worker died: {$childPID}\n");
 					unset($children[$childPID]);
-					$i--;					
+					$i--;
 				}
 				usleep(250000);
 				if ($GLOBALS['send_signal'] !== FALSE){

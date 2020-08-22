@@ -37,8 +37,7 @@ account | 前端账号相关 | /account/v1
 
 Header | 是否必填 | 说明
 ---|---|---
-X-SFLL-Token | 否 | 前端授权token
-X-SFLL-Admin-Token | 否 | 管理端授权token
+X-Sfll-Token | 否 | 登录授权token
 
 
 ### 错误码

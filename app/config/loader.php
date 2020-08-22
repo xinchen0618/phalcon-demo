@@ -1,15 +1,11 @@
 <?php
 
-require BASE_PATH . '/vendor/autoload.php';
+use Phalcon\Loader;
 
-/**
- * Registering an autoloader
- */
-$loader = new \Phalcon\Loader();
+include BASE_PATH . '/vendor/autoload.php';
 
-$loader->registerDirs(
-    [
-        APP_PATH . '/controllers/',
-        APP_PATH . '/services/',
-    ]
-)->register();
+$loader = new Loader();
+$loader->registerDirs([
+    APP_PATH . '/services'
+]);
+$loader->register();
