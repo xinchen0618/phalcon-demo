@@ -14,7 +14,7 @@ class UserController extends Controller
             'orderBy' => 'u.user_id DESC'
         ]);
 
-        return UtilService::successResponse(200, $result);
+        return UtilService::response([200, $result]);
     }
 
     public function postUsers(): Response
@@ -23,17 +23,11 @@ class UserController extends Controller
 
         $this->db->begin();
 
-        $userId = $this->db->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$json['user_name']}'");
-        if (!$userId) {
-            $this->db->insertAsDict('users', ['user_name' => $json['user_name']]);
-            $userId = (int) $this->db->lastInsertId();
-        }
-        $sql = "INSERT INTO user_counts (user_id, counts) VALUES ({$userId}, 1) ON DUPLICATE KEY UPDATE counts = counts + 1";
-        $this->db->execute($sql);
+        $userId = UserService::postUsers($json);
 
         $this->db->commit();
 
-        return UtilService::successResponse(200, ['user_id' => $userId]);
+        return UtilService::response([200, ['user_id' => $userId]]);
     }
 
     public function deleteUsersById(int $userId): Response

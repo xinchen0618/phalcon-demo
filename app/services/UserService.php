@@ -6,18 +6,17 @@ class UserService
 {
     /**
      * 添加用户
-     * @param array $params ['user_name' => '']
+     * @param array $user ['user_name' => '']
      * @return int
      * @throws Exception
      */
-    public static function postUsers(array $params): int
+    public static function postUsers(array $user): int
     {
         $db = Di::getDefault()->get('db');
 
-        $userName = random_int(100000, 999999);
-        $userId = $db->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$userName}'");
+        $userId = $db->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$user['user_name']}'");
         if (!$userId) {
-            $db->insertAsDict('users', ['user_name' => $userName]);
+            $db->insertAsDict('users', ['user_name' => $user['user_name']]);
             $userId = $db->lastInsertId();
         }
         $sql = "INSERT INTO user_counts (user_id, counts) VALUES ({$userId}, 1) ON DUPLICATE KEY UPDATE counts = counts + 1";

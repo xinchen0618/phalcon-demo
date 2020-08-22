@@ -76,5 +76,5 @@ try {
     if ('prod' === getenv('RUNTIME_ENVIRONMENT')) {
         $message = '服务异常, 请稍后重试';
     }
-    UtilService::errorResponse(500, 'Exception', $message)->send();
+    UtilService::response([500, 'Exception', $message])->send();
 }
