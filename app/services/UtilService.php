@@ -34,8 +34,7 @@ class UtilService
                 }
 
                 if ($required && !isset($json[$paramKey])) {
-                    self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-                    exit;
+                    self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
                 }
                 if (isset($json[$paramKey])) {
                     if (strpos($valueType, '[') === 0) {
@@ -65,8 +64,7 @@ class UtilService
                 return $defaultValue;
             }
 
-            self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-            exit;
+            self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
         }
 
         $allowEmpty = null !== $defaultValue;
@@ -102,19 +100,16 @@ class UtilService
                 }
             }
 
-            self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-            exit;
+            self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
         }
 
         // 图片数组
         if ('image[]' === $valueType) {
             if (!is_array($paramValue)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
             if (!$paramValue && !$allowEmpty) {
-                self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-                exit;
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
             }
 
             $cleanImages = [];
@@ -130,12 +125,10 @@ class UtilService
         // 数组
         if ('array' === $valueType) {
             if (!is_array($paramValue)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
             if (!$paramValue && !$allowEmpty) {
-                self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-                exit;
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
             }
 
             return $paramValue;
@@ -143,23 +136,20 @@ class UtilService
 
         /* 数字或字符串 */
         if (!(is_numeric($paramValue) || is_string($paramValue))) {
-            self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-            exit;
+            self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
         }
         $paramValue = trim($paramValue);
 
         // 整型
         if ('int' === substr($valueType, -3)) {
             if ('' === $paramValue && !$allowEmpty) {
-                self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-                exit;
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
             }
 
             $paramValue = '' === $paramValue ? 0 : $paramValue;  // 兼容, 空视为0
             $paramValueInt = (int)$paramValue;
             if ($paramValue != (string)$paramValueInt || ('+int' == $valueType && $paramValueInt <= 0) || ('!-int' == $valueType && $paramValueInt < 0)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValueInt;
@@ -169,8 +159,7 @@ class UtilService
         if ('string' === $valueType) {
             $value = trim(strip_tags($paramValue));
             if ('' === $value && !$allowEmpty) {
-                self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-                exit;
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
             }
 
             return $value;
@@ -179,8 +168,7 @@ class UtilService
         /* 特定类型字符串begin */
         if ('' === $paramValue) {
             if (!$allowEmpty) {
-                self::response([400, 'EmptyParam', "{$paramName}不得为空"])->send();
-                exit;
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
             }
 
             return $paramValue;
@@ -195,8 +183,7 @@ class UtilService
         if ('phone' === $valueType) {
             if (!preg_match('/^1[3456789]\d{9}$/', $paramValue)
                 && !preg_match('/^(([0+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/', $paramValue)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -205,8 +192,7 @@ class UtilService
         // 邮箱
         if ('email' === $valueType) {
             if (!filter_var($paramValue, FILTER_VALIDATE_EMAIL)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -215,8 +201,7 @@ class UtilService
         // 经度
         if ('longitude' === $valueType) {
             if (!is_numeric($paramValue) || $paramValue < -180 || $paramValue > 180) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -225,8 +210,7 @@ class UtilService
         // 纬度
         if ('latitude' === $valueType) {
             if (!is_numeric($paramValue) || $paramValue < -90 || $paramValue > 90) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -235,8 +219,7 @@ class UtilService
         // 金额
         if ('money' === $valueType) {
             if (!is_numeric($paramValue) || $paramValue < 0 || (string)$paramValue != sprintf('%.2F', $paramValue)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return sprintf('%.2F', $paramValue);
@@ -245,32 +228,30 @@ class UtilService
         // 图片
         if ('image' === $valueType) {
             if (!self::isImage($paramValue)) {
-                self::response([400, 'InvalidParam', "{$paramName}不正确"])->send();
-                exit;
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValue;
         }
         /* 特定类型字符串end */
 
-        self::response([400, 'UndefinedValueType', "未知数据类型: {$paramKey}"])->send();  // 后端错误
-        exit;
+        self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramKey}");  // 后端错误
     }
 
     /**
-     * 错误返回
+     * 错误返回并结束程序
      * @param int $statusCode
      * @param string $status
      * @param string $message
-     * @return Response
      */
-//    public static function errorResponse(int $statusCode, string $status, string $message): Response
-//    {
-//        return Di::getDefault()->getResponse()->setStatusCode($statusCode)->setJsonContent([
-//            'status' => $status,
-//            'message' => $message
-//        ]);
-//    }
+    public static function errorResponse(int $statusCode, string $status, string $message): void
+    {
+        Di::getDefault()->getResponse()->setStatusCode($statusCode)->setJsonContent([
+            'status' => $status,
+            'message' => $message
+        ])->send();
+        exit;
+    }
 
     /**
      * 成功返回
@@ -278,15 +259,15 @@ class UtilService
      * @param array $content
      * @return Response
      */
-//    public static function successResponse(int $statusCode, array $content = []): Response
-//    {
-//        $response = Di::getDefault()->getResponse()->setStatusCode($statusCode);
-//        if ($content) {
-//            $response->setJsonContent($content);
-//        }
-//
-//        return $response;
-//    }
+    public static function successResponse(int $statusCode, array $content = []): Response
+    {
+        $response = Di::getDefault()->getResponse()->setStatusCode($statusCode);
+        if ($content) {
+            $response->setJsonContent($content);
+        }
+
+        return $response;
+    }
 
     /**
      * 返回
@@ -341,8 +322,7 @@ class UtilService
 
         $flag = $di->getRedis()->set($key, 1, ['nx', 'ex' => $interval]);
         if (!$flag) {
-            self::response([429, 'SpeedLimit', '手快了, 请稍后~~'])->send();
-            exit;
+            self::errorResponse(429, 'SpeedLimit', '手快了, 请稍后~~');
         }
     }
 

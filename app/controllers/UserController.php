@@ -14,7 +14,7 @@ class UserController extends Controller
             'orderBy' => 'u.user_id DESC'
         ]);
 
-        return UtilService::response([200, $result]);
+        return UtilService::successResponse(200, $result);
     }
 
     public function postUsers(): Response
@@ -27,7 +27,7 @@ class UserController extends Controller
 
         $this->db->commit();
 
-        return UtilService::response([200, ['user_id' => $userId]]);
+        return UtilService::successResponse(200, ['user_id' => $userId]);
     }
 
     public function deleteUsersById(int $userId): Response
