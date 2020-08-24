@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 use Phalcon\Cli\Console as ConsoleApp;
-
-define('BASE_PATH', __DIR__);
-define('APP_PATH', BASE_PATH . '/app');
+use Phalcon\Loader;
 
 /**
  * 错误提示转Exception
@@ -18,6 +16,9 @@ function exception_error_handler($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
 set_error_handler('exception_error_handler');
+
+define('BASE_PATH', __DIR__);
+define('APP_PATH', BASE_PATH . '/app');
 
 /**
  * The FactoryDefault Dependency Injector automatically registers the services that
@@ -51,15 +52,27 @@ foreach ($argv as $k => $arg) {
 }
 
 /**
- * Dynamic loader
+ * Load task
  */
-$task = $arguments['task'] ?? 'Main';
-include APP_PATH . "/tasks/{$task}Task.php";
+$loader = new Loader();
+$loader->registerDirs(
+    [
+        APP_PATH . '/tasks'
+    ],
+    true
+);
+$loader->register();
 
 /**
  * Create a console application
  */
 $console = new ConsoleApp($di);
+
+/**
+ * Cron
+ */
+$di->setShared('console', $console);
+include APP_PATH . '/config/cron.php';
 
 try {
 

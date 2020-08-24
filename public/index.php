@@ -4,11 +4,6 @@ declare(strict_types=1);
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 
-error_reporting(E_ALL);
-
-define('BASE_PATH', dirname(__DIR__));
-define('APP_PATH', BASE_PATH . '/app');
-
 /**
  * 错误提示转Exception
  */
@@ -19,6 +14,11 @@ function exception_error_handler($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
 set_error_handler('exception_error_handler');
+
+error_reporting(E_ALL);
+
+define('BASE_PATH', dirname(__DIR__));
+define('APP_PATH', BASE_PATH . '/app');
 
 try {
     /**

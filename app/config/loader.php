@@ -1,4 +1,7 @@
 <?php
+/**
+ * 公共load
+ */
 
 use Phalcon\Loader;
 

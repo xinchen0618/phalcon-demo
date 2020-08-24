@@ -27,3 +27,7 @@ INTERVAL=1 COUNT=100 QUEUE=queueName php /path_to_project/app/queue/resque
 // 延迟任务
 php /path_to_project/app/queue/resque-scheduler
 ```
+
+### Cron
+
+- https://github.com/SidRoberts/phalcon-cron
