@@ -105,7 +105,7 @@ class MainTask extends Task
      */
     public function reEnqueueAction(): void
     {
-        Resque::setBackend('127.0.0.1:6379', 1);
+        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redisDbIndex->queue, $this->config->redis->auth);
         do {
             $job = $this->queueRedis->rPop('resque:failed');
             if ($job) {
@@ -120,7 +120,7 @@ class MainTask extends Task
      */
     public function delayQueueAction(): void
     {
-        Resque::setBackend('127.0.0.1:6379', 1);
+        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redisDbIndex->queue, $this->config->redis->auth);
 
         $args = ['UserService', 'postUsers', ['user_name' => 'delay_' . random_int(100000, 999999)], true];
         ResqueScheduler::enqueueIn(30, 'universal', 'QueueJob', $args);
@@ -128,8 +128,16 @@ class MainTask extends Task
 
     public function deleteUserAction(): void
     {
+        $this->db->begin();
         $result = UserService::deleteUser(9);
         var_export($result);
+        $this->db->commit();
     }
 
+    public function notice2exceptionAction(): void
+    {
+        $this->db->begin();
+        UserService::postUsers(['user_name' => 'bbb']);
+        $this->db->commit();
+    }
 }

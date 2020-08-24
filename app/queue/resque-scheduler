@@ -1,9 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Phalcon\Di;
-
-include dirname(__DIR__, 2) . '/vendor/autoload.php';
+include __DIR__ . '/init.php';
 
 if (!class_exists('Composer\Autoload\ClassLoader', false)) {
     die(
@@ -11,11 +9,6 @@ if (!class_exists('Composer\Autoload\ClassLoader', false)) {
             'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
             'php composer.phar install' . PHP_EOL
     );
-}
-
-if (null === Resque::$redis) {
-    $config = Di::getDefault()->get('config');
-    Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
 }
 
 // Set log level for resque-scheduler

@@ -9,6 +9,17 @@ error_reporting(E_ALL);
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 
+/**
+ * 错误提示转Exception
+ */
+function exception_error_handler($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) {
+        return;
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+}
+set_error_handler('exception_error_handler');
+
 try {
     /**
      * The FactoryDefault Dependency Injector automatically registers the services that
@@ -20,11 +31,6 @@ try {
      * Include Services
      */
     include APP_PATH . '/config/services.php';
-
-    /**
-     * Get config service for use in inline setup below
-     */
-    $config = $di->getConfig();
 
     /**
      * Include Autoloader
@@ -47,7 +53,7 @@ try {
      * 默认v1, 其他版本加版本号
      * example:
      *      Module: /account/v1, /account/v2
-     *      App: account.php, account_v2.php
+     *      Route: app/routes/account.php, app/routes/account_v2.php
      *      Controller: app/controllers/AccountController.php, app/controllers/AccountV2Controller.php
      */
     preg_match('/\/v\d+\//', $_SERVER['REQUEST_URI'], $version);
@@ -60,9 +66,9 @@ try {
             include $controllerFile;
         }
 
-        $appFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';
-        if (is_file($appFile)) {
-            include $appFile;
+        $routeFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';
+        if (is_file($routeFile)) {
+            include $routeFile;
         }
     }
 
@@ -70,7 +76,7 @@ try {
      * Handle the request
      */
     $app->handle($_SERVER['REQUEST_URI']);
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     $message = UtilService::getStringTrace($e);
     error_log($message);
     if ('prod' === getenv('RUNTIME_ENVIRONMENT')) {

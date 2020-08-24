@@ -9,6 +9,17 @@ define('BASE_PATH', __DIR__);
 define('APP_PATH', BASE_PATH . '/app');
 
 /**
+ * 错误提示转Exception
+ */
+function exception_error_handler($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) {
+        return;
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+}
+set_error_handler('exception_error_handler');
+
+/**
  * The FactoryDefault Dependency Injector automatically registers the services that
  * provide a full stack framework. These default services can be overidden with custom ones.
  */
@@ -18,11 +29,6 @@ $di = new CliDi();
  * Include Services
  */
 include APP_PATH . '/config/services.php';
-
-/**
- * Get config service for use in inline setup below
- */
-$config = $di->getConfig();
 
 /**
  * Include Autoloader
@@ -73,8 +79,7 @@ try {
      */
     echo PHP_EOL;
 
-} catch (Exception $e) {
-    echo $e->getMessage() . PHP_EOL;
-    echo $e->getTraceAsString() . PHP_EOL;
+} catch (Throwable $e) {
+    echo UtilService::getStringTrace($e) . PHP_EOL;
     exit(255);
 }
