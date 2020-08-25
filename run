@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 use Phalcon\Cli\Console as ConsoleApp;
-use Phalcon\Loader;
 
 /**
  * 错误提示转Exception
@@ -37,6 +36,17 @@ include APP_PATH . '/config/services.php';
 include APP_PATH . '/config/loader.php';
 
 /**
+ * Load task
+ */
+$loader->registerDirs(
+    [
+        APP_PATH . '/tasks'
+    ],
+    true
+);
+$loader->register();
+
+/**
  * Process the console arguments
  */
 $arguments = [];
@@ -50,18 +60,6 @@ foreach ($argv as $k => $arg) {
         $arguments['params'][] = $arg;
     }
 }
-
-/**
- * Load task
- */
-$loader = new Loader();
-$loader->registerDirs(
-    [
-        APP_PATH . '/tasks'
-    ],
-    true
-);
-$loader->register();
 
 /**
  * Create a console application
