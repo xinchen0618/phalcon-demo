@@ -1,7 +1,11 @@
 <?php
 
+namespace app\services;
+
 use Phalcon\Di;
 use Phalcon\Http\Response;
+use Resque;
+use Throwable;
 
 class UtilService
 {

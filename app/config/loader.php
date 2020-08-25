@@ -8,7 +8,9 @@ use Phalcon\Loader;
 include BASE_PATH . '/vendor/autoload.php';
 
 $loader = new Loader();
-$loader->registerDirs([
-    APP_PATH . '/services'
-]);
+$loader->registerNamespaces(
+    [
+        'app\services' => BASE_PATH . '/app/services',
+    ]
+);
 $loader->register();

@@ -1,7 +1,12 @@
 <?php
 declare(strict_types=1);
 
+namespace app\tasks;
+
+use app\services\UserService;
+use app\services\UtilService;
 use Phalcon\Cli\Task;
+use Resque;
 
 class MainTask extends Task
 {
@@ -69,24 +74,9 @@ class MainTask extends Task
     {
         $params = $params ? json_decode($params, true) : [];
         $transactionBool = 'true' == $transaction;
-
-        echo '$service: ';
-        var_export($service);
-        echo "\n";
-
-        echo '$method: ';
-        var_export($method);
-        echo "\n";
-
-        echo '$params: ';
-        var_export($params);
-        echo "\n";
-
-        echo '$transactionBool: ';
-        var_export($transactionBool);
-        echo "\n";
-
-        $service::$method($params, $transactionBool);
+        $service = "\\app\\services\\{$service}";
+        $result = $service::$method($params, $transactionBool);
+        var_export($result);
     }
 
     /**
@@ -126,10 +116,10 @@ class MainTask extends Task
         ResqueScheduler::enqueueIn(30, 'universal', 'QueueJob', $args);
     }
 
-    public function deleteUserAction(): void
+    public function deleteUserAction(int $userId): void
     {
         $this->db->begin();
-        $result = UserService::deleteUser(9);
+        $result = UserService::deleteUser($userId);
         var_export($result);
         $this->db->commit();
     }

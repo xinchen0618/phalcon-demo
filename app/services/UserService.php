@@ -1,5 +1,7 @@
 <?php
 
+namespace app\services;
+
 use Phalcon\Di;
 
 class UserService
@@ -8,7 +10,6 @@ class UserService
      * 添加用户
      * @param array $user ['user_name' => '']
      * @return int
-     * @throws Exception
      */
     public static function postUsers(array $user): int
     {

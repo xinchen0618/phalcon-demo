@@ -4,6 +4,7 @@
  * @var \Phalcon\Mvc\Micro $app
  */
 
+use app\controllers\UserController;
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
 $user = new MicroCollection();

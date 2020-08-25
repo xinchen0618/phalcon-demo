@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use app\services\UtilService;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 
-/**
+/*
  * 错误提示转Exception
  */
 function exception_error_handler($severity, $message, $file, $line) {
@@ -76,7 +77,7 @@ try {
      * Handle the request
      */
     $app->handle($_SERVER['REQUEST_URI']);
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     $message = UtilService::getStringTrace($e);
     error_log($message);
     if ('prod' === getenv('RUNTIME_ENVIRONMENT')) {

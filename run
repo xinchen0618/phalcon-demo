@@ -2,10 +2,11 @@
 <?php
 declare(strict_types=1);
 
+use app\services\UtilService;
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 use Phalcon\Cli\Console as ConsoleApp;
 
-/**
+/*
  * 错误提示转Exception
  */
 function exception_error_handler($severity, $message, $file, $line) {
@@ -38,9 +39,9 @@ include APP_PATH . '/config/loader.php';
 /**
  * Load task
  */
-$loader->registerDirs(
+$loader->registerNamespaces(
     [
-        APP_PATH . '/tasks'
+        'app\tasks' => BASE_PATH . '/app/tasks',
     ],
     true
 );
@@ -53,7 +54,7 @@ $arguments = [];
 
 foreach ($argv as $k => $arg) {
     if ($k == 1) {
-        $arguments['task'] = $arg;
+        $arguments['task'] = "\\app\\tasks\\" . ucfirst($arg);
     } elseif ($k == 2) {
         $arguments['action'] = $arg;
     } elseif ($k >= 3) {

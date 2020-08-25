@@ -11,7 +11,7 @@ $di->set(
             new \Sid\Phalcon\Cron\Job\Phalcon(
                 '* * * * *',
                 [
-                    'task' => 'Main',
+                    'task' => "\\app\\tasks\\Main",
                     'action' => 'reEnqueue'
                 ]
             )

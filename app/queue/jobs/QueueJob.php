@@ -16,6 +16,7 @@ class QueueJob
             $db->begin();
         }
 
+        $service = "\\app\\services\\{$service}";
         $service::$method($params);
 
         if ($transaction) {
