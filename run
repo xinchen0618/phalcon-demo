@@ -2,78 +2,75 @@
 <?php
 declare(strict_types=1);
 
-use app\services\UtilService;
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 use Phalcon\Cli\Console as ConsoleApp;
-
-/*
- * 错误提示转Exception
- */
-function exception_error_handler($severity, $message, $file, $line) {
-    if (!(error_reporting() & $severity)) {
-        return;
-    }
-    throw new ErrorException($message, 0, $severity, $file, $line);
-}
-set_error_handler('exception_error_handler');
 
 define('BASE_PATH', __DIR__);
 define('APP_PATH', BASE_PATH . '/app');
 
-/**
- * The FactoryDefault Dependency Injector automatically registers the services that
- * provide a full stack framework. These default services can be overidden with custom ones.
- */
-$di = new CliDi();
-
-/**
- * Include Services
- */
-include APP_PATH . '/config/services.php';
-
-/**
- * Include Autoloader
- */
-include APP_PATH . '/config/loader.php';
-
-/**
- * Load task
- */
-$loader->registerNamespaces(
-    [
-        'app\tasks' => BASE_PATH . '/app/tasks',
-    ],
-    true
-);
-$loader->register();
-
-/**
- * Process the console arguments
- */
-$arguments = [];
-
-foreach ($argv as $k => $arg) {
-    if ($k == 1) {
-        $arguments['task'] = "\\app\\tasks\\" . ucfirst($arg);
-    } elseif ($k == 2) {
-        $arguments['action'] = $arg;
-    } elseif ($k >= 3) {
-        $arguments['params'][] = $arg;
-    }
-}
-
-/**
- * Create a console application
- */
-$console = new ConsoleApp($di);
-
-/**
- * Cron
- */
-$di->setShared('console', $console);
-include APP_PATH . '/config/cron.php';
-
 try {
+    /**
+     * The FactoryDefault Dependency Injector automatically registers the services that
+     * provide a full stack framework. These default services can be overridden with custom ones.
+     */
+    $di = new CliDi();
+
+    /**
+     * 错误提示转Exception
+     */
+    set_error_handler(function ($severity, $message, $file, $line) {
+        if (!(error_reporting() & $severity)) {
+            return;
+        }
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    });
+
+    /**
+     * Include Services
+     */
+    include APP_PATH . '/config/services.php';
+
+    /**
+     * Include Autoloader
+     */
+    include APP_PATH . '/config/loader.php';
+
+    /**
+     * Load task
+     */
+    $loader->registerNamespaces(
+        [
+            'app\tasks' => BASE_PATH . '/app/tasks',
+        ],
+        true
+    );
+    $loader->register();
+
+    /**
+     * Process the console arguments
+     */
+    $arguments = [];
+
+    foreach ($argv as $k => $arg) {
+        if ($k == 1) {
+            $arguments['task'] = "\\app\\tasks\\" . ucfirst($arg);
+        } elseif ($k == 2) {
+            $arguments['action'] = $arg;
+        } elseif ($k >= 3) {
+            $arguments['params'][] = $arg;
+        }
+    }
+
+    /**
+     * Create a console application
+     */
+    $console = new ConsoleApp($di);
+
+    /**
+     * Cron
+     */
+    $di->setShared('console', $console);
+    include APP_PATH . '/config/cron.php';
 
     /**
      * Handle
@@ -92,6 +89,7 @@ try {
     echo PHP_EOL;
 
 } catch (Throwable $e) {
-    echo UtilService::getStringTrace($e) . PHP_EOL;
+    echo $e->getMessage() . PHP_EOL;
+    echo $e->getTraceAsString() . PHP_EOL;
     exit(255);
 }

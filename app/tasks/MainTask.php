@@ -7,12 +7,12 @@ use app\services\UserService;
 use app\services\UtilService;
 use Phalcon\Cli\Task;
 use Resque;
+use ResqueScheduler;
 
 class MainTask extends Task
 {
     /**
      * 写redis
-     * @throws Exception
      */
     public function setKeyAction(): void
     {
@@ -81,7 +81,6 @@ class MainTask extends Task
 
     /**
      * 入队
-     * @throws Exception
      */
     public function enqueueAction(): void
     {
@@ -91,7 +90,7 @@ class MainTask extends Task
     }
 
     /**
-     * 失败任务重新入队
+     * 消息队列失败任务重新入队
      */
     public function reEnqueueAction(): void
     {

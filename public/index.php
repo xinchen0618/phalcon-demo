@@ -1,20 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use app\services\UtilService;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
-
-/*
- * 错误提示转Exception
- */
-function exception_error_handler($severity, $message, $file, $line) {
-    if (!(error_reporting() & $severity)) {
-        return;
-    }
-    throw new ErrorException($message, 0, $severity, $file, $line);
-}
-set_error_handler('exception_error_handler');
 
 error_reporting(E_ALL);
 
@@ -24,9 +12,19 @@ define('APP_PATH', BASE_PATH . '/app');
 try {
     /**
      * The FactoryDefault Dependency Injector automatically registers the services that
-     * provide a full stack framework. These default services can be overidden with custom ones.
+     * provide a full stack framework. These default services can be overridden with custom ones.
      */
     $di = new FactoryDefault();
+
+    /**
+     * 错误提示转Exception
+     */
+    set_error_handler(function ($severity, $message, $file, $line) {
+        if (!(error_reporting() & $severity)) {
+            return;
+        }
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    });
 
     /**
      * Include Services
@@ -78,10 +76,15 @@ try {
      */
     $app->handle($_SERVER['REQUEST_URI']);
 } catch (Throwable $e) {
-    $message = UtilService::getStringTrace($e);
+    $message = $e->getMessage() . " \n" . $e->getTraceAsString();
     error_log($message);
-    if ('prod' === getenv('RUNTIME_ENVIRONMENT')) {
+    if ('prod' === getenv('RUNTIME_ENV')) {
         $message = '服务异常, 请稍后重试';
     }
-    UtilService::errorResponse(500, 'Exception', $message);
+    $di->getResponse()->setStatusCode(500)->setJsonContent(
+        [
+            'status' => 'Exception',
+            'message' => $message
+        ]
+    )->send();
 }
