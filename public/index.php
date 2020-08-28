@@ -2,20 +2,10 @@
 declare(strict_types=1);
 
 use Phalcon\Di\FactoryDefault;
+use Phalcon\Http\Response;
 use Phalcon\Mvc\Micro;
 
-error_reporting(E_ALL);
-
-define('BASE_PATH', dirname(__DIR__));
-define('APP_PATH', BASE_PATH . '/app');
-
 try {
-    /**
-     * The FactoryDefault Dependency Injector automatically registers the services that
-     * provide a full stack framework. These default services can be overridden with custom ones.
-     */
-    $di = new FactoryDefault();
-
     /**
      * 错误提示转Exception
      */
@@ -25,6 +15,17 @@ try {
         }
         throw new ErrorException($message, 0, $severity, $file, $line);
     });
+
+    error_reporting(E_ALL);
+
+    define('BASE_PATH', dirname(__DIR__));
+    define('APP_PATH', BASE_PATH . '/app');
+
+    /**
+     * The FactoryDefault Dependency Injector automatically registers the services that
+     * provide a full stack framework. These default services can be overridden with custom ones.
+     */
+    $di = new FactoryDefault();
 
     /**
      * Include Services
@@ -81,7 +82,7 @@ try {
     if ('prod' === getenv('RUNTIME_ENV')) {
         $message = '服务异常, 请稍后重试';
     }
-    $di->getResponse()->setStatusCode(500)->setJsonContent(
+    (new Response())->setStatusCode(500)->setJsonContent(
         [
             'status' => 'Exception',
             'message' => $message

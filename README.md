@@ -18,7 +18,7 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 - https://github.com/resque/php-resque
 
 ```
-// 生产. 队列名, Job, args => [string $service, string $method, array $params, bool $transaction]
+// 生产. 队列名, Job, args => [string $service, string $method, array $params, bool $transaction, int $retriedCount]
 Resque::enqueue('queueName', 'QueueJob', $args);
 
 // 消费. 队列名

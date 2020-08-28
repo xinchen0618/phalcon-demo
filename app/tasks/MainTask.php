@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace app\tasks;
 
@@ -64,13 +63,13 @@ class MainTask extends Task
     }
 
     /**
-     * 执行队列任务
+     * 执行队列格式任务
      * @param string $service
      * @param string $method
      * @param string $params JSON字符串
      * @param string $transaction 'true'/'false', 命令行参数只能是字符串
      */
-    public function queueAction(string $service, string $method, string $params = '', string $transaction = 'false'): void
+    public function doQueueAction(string $service, string $method, string $params = '', string $transaction = 'false'): void
     {
         $params = $params ? json_decode($params, true) : [];
         $transactionBool = 'true' == $transaction;
@@ -84,7 +83,7 @@ class MainTask extends Task
      */
     public function enqueueAction(): void
     {
-        for ($i =0; $i < 10000; $i++) {
+        for ($i =0; $i < 3; $i++) {
             UtilService::enqueue('universal', 'UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
         }
     }
@@ -99,7 +98,12 @@ class MainTask extends Task
             $job = $this->queueRedis->rPop('resque:failed');
             if ($job) {
                 $job = json_decode($job, true);
-                Resque::enqueue($job['queue'], $job['payload']['class'], $job['payload']['args'][0]);
+
+                // 入队参数, 索引数组 [string $service, string $method, array $params, bool $transaction, int $retriedCount]
+                $args = $job['payload']['args'][0];
+                $args[4] = isset($args[4]) ? $args[4] + 1 : 1;  // 已重试次数
+
+                Resque::enqueue($job['queue'], $job['payload']['class'], $args);
             }
         } while ($job);
     }
@@ -118,15 +122,11 @@ class MainTask extends Task
     public function deleteUserAction(int $userId): void
     {
         $this->db->begin();
+
         $result = UserService::deleteUser($userId);
         var_export($result);
+
         $this->db->commit();
     }
 
-    public function notice2exceptionAction(): void
-    {
-        $this->db->begin();
-        UserService::postUsers(['user_name' => 'bbb']);
-        $this->db->commit();
-    }
 }

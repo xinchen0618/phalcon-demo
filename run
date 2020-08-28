@@ -5,16 +5,7 @@ declare(strict_types=1);
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 use Phalcon\Cli\Console as ConsoleApp;
 
-define('BASE_PATH', __DIR__);
-define('APP_PATH', BASE_PATH . '/app');
-
 try {
-    /**
-     * The FactoryDefault Dependency Injector automatically registers the services that
-     * provide a full stack framework. These default services can be overridden with custom ones.
-     */
-    $di = new CliDi();
-
     /**
      * 错误提示转Exception
      */
@@ -24,6 +15,15 @@ try {
         }
         throw new ErrorException($message, 0, $severity, $file, $line);
     });
+
+    define('BASE_PATH', __DIR__);
+    define('APP_PATH', BASE_PATH . '/app');
+
+    /**
+     * The FactoryDefault Dependency Injector automatically registers the services that
+     * provide a full stack framework. These default services can be overridden with custom ones.
+     */
+    $di = new CliDi();
 
     /**
      * Include Services

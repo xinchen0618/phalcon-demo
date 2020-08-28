@@ -1,18 +1,16 @@
 <?php
-declare(strict_types=1);
 
 use Phalcon\Di\FactoryDefault\Cli as CliDi;
 
 /**
  * 错误提示转Exception
  */
-function exception_error_handler($severity, $message, $file, $line) {
+set_error_handler(function ($severity, $message, $file, $line) {
     if (!(error_reporting() & $severity)) {
         return;
     }
     throw new ErrorException($message, 0, $severity, $file, $line);
-}
-set_error_handler('exception_error_handler');
+});
 
 define('BASE_PATH', dirname(__DIR__, 2));
 define('APP_PATH', BASE_PATH . '/app');
