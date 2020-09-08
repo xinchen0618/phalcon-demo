@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 $di->set(
     'cron',
@@ -11,7 +10,7 @@ $di->set(
             new \Sid\Phalcon\Cron\Job\Phalcon(
                 '* * * * *',
                 [
-                    'task' => "\\app\\tasks\\Main",
+                    'task' => '\app\tasks\Main',
                     'action' => 'reEnqueue'
                 ]
             )

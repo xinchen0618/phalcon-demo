@@ -83,7 +83,7 @@ class MainTask extends Task
      */
     public function enqueueAction(): void
     {
-        for ($i =0; $i < 3; $i++) {
+        for ($i =0; $i < 10000; $i++) {
             UtilService::enqueue('universal', 'UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
         }
     }
@@ -129,4 +129,8 @@ class MainTask extends Task
         $this->db->commit();
     }
 
+    public function classAction(): void
+    {
+        var_export(UserService::class);
+    }
 }

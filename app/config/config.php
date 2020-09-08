@@ -25,4 +25,9 @@ return [
         'queue' => 1,     // 队列
         'redis' => 2,       // 存储
     ],
+
+    // 跨域白名单
+    'domainWhitelist' => [
+        '*'
+    ],
 ];

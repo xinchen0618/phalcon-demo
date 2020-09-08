@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use app\services\UtilService;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Micro;
@@ -36,6 +37,33 @@ try {
      * Include Autoloader
      */
     include APP_PATH . '/config/loader.php';
+
+    /**
+     * 跨域
+     */
+    if (!empty($_SERVER['HTTP_ORIGIN'])) {
+        $origin = explode('.', parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST));
+        $originLen = count($origin);
+        $originDomain = $originLen > 2 ? $origin[$originLen - 2] . '.' . $origin[$originLen - 1] : $origin[0];
+        $domainWhitelist = $di->getConfig()->domainWhitelist->toArray();
+        if (in_array('*', $domainWhitelist, true) || in_array($originDomain, $domainWhitelist, true)) {
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+            header('Access-Control-Allow-Headers: accept, content-type');
+            header('Access-Control-Allow-Methods: GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH');
+            header('Access-Control-Max-Age: ' . 86400 * 30);
+            if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
+                UtilService::successResponse(200)->send();
+                exit;
+            }
+        }
+    }
+
+    /**
+     * POST防重
+     */
+    if ('POST' === $_SERVER['REQUEST_METHOD']) {
+        UtilService::speedLimit();
+    }
 
     /**
      * Starting the application
@@ -77,7 +105,7 @@ try {
      */
     $app->handle($_SERVER['REQUEST_URI']);
 } catch (Throwable $e) {
-    $message = $e->getMessage() . " \n" . $e->getTraceAsString();
+    $message = $e->getMessage() . " \n" . $e->getTraceAsString() . " \n";
     error_log($message);
     if ('prod' === getenv('RUNTIME_ENV')) {
         $message = '服务异常, 请稍后重试';
