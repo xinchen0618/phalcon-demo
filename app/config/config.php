@@ -22,8 +22,9 @@ return [
     // Redis dbIndex 分配
     'redisDbIndex' => [
         'cache' => 0,       // 缓存
-        'queue' => 1,     // 队列
+        'queue' => 1,       // 队列
         'redis' => 2,       // 存储
+        'session' => 3,     // SESSION
     ],
 
     // 跨域白名单
