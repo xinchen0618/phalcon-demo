@@ -39,12 +39,30 @@ try {
     include APP_PATH . '/config/loader.php';
 
     /**
+     * Load controller
+     */
+    $loader->registerNamespaces(
+        [
+            'app\controllers' => BASE_PATH . '/app/controllers',
+        ],
+        true
+    );
+    $loader->register();
+
+    /**
      * 跨域
      */
     if (!empty($_SERVER['HTTP_ORIGIN'])) {
-        $origin = explode('.', parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST));
-        $originLen = count($origin);
-        $originDomain = $originLen > 2 ? $origin[$originLen - 2] . '.' . $origin[$originLen - 1] : $origin[0];
+        $originHost = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
+        if (false === strpos($originHost, '.')) {       // localhost
+            $originDomain = $originHost;
+        } elseif (filter_var($originHost, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {      // IP
+            $originDomain = $originHost;
+        } else {    // 取根域名
+            $originHost = explode('.', $originHost);
+            $originLen = count($originHost);
+            $originDomain = $originHost[$originLen - 2] . '.' . $originHost[$originLen - 1];
+        }
         $domainWhitelist = $di->getConfig()->domainWhitelist->toArray();
         if (in_array('*', $domainWhitelist, true) || in_array($originDomain, $domainWhitelist, true)) {
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
@@ -78,23 +96,18 @@ try {
 
     /**
      * Dynamic loading
-     * 默认v1, 其他版本加版本号
+     * 默认v1, 其他版本加版本号, 蛇形式命名
      * example:
-     *      Module: /account/v1, /account/v2
-     *      Route: app/routes/account.php, app/routes/account_v2.php
-     *      Controller: app/controllers/AccountController.php, app/controllers/AccountV2Controller.php
+     *      Module:
+     *          /admin_order/v1, /admin_order/v2
+     *      Route:
+     *          app/routes/admin_order.php, app/routes/admin_order_v2.php
      */
     preg_match('/\/v\d+\//', $_SERVER['REQUEST_URI'], $version);
     if ($version) {
-        $module = ltrim(strstr($_SERVER['REQUEST_URI'], $version[0], true), '/');
-        $version = trim($version[0], '/');
-
-        $controllerFile = APP_PATH . '/controllers/' . str_replace('_', '', ucwords($module, '_')) . ('v1' == $version ? '' : ucfirst($version)) . 'Controller.php';
-        if (is_file($controllerFile)) {
-            include $controllerFile;
-        }
-
-        $routeFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';
+        $module = ltrim(strstr($_SERVER['REQUEST_URI'], $version[0], true), '/');   // e.g. admin_order
+        $version = trim($version[0], '/');  // e.g. v1
+        $routeFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';    // e.g. admin_order.php
         if (is_file($routeFile)) {
             include $routeFile;
         }

@@ -19,6 +19,21 @@ $di->setShared('db', function () {
 });
 
 /**
+ * cache
+ */
+$di->setShared('cache', function () {
+    $redisConfig = $this->getConfig()->redis;
+    $cache = new Redis();
+    $cache->connect($redisConfig->host, $redisConfig->port);
+    if ($redisConfig->auth) {
+        $cache->auth($redisConfig->auth);
+    }
+    $cache->select($this->getConfig()->redisDbIndex->cache);
+
+    return $cache;
+});
+
+/**
  * redis存储
  */
 $di->setShared('redis', function () {

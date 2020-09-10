@@ -47,21 +47,6 @@ try {
     $loader->register();
 
     /**
-     * Process the console arguments
-     */
-    $arguments = [];
-
-    foreach ($argv as $k => $arg) {
-        if ($k == 1) {
-            $arguments['task'] = "\\app\\tasks\\" . ucfirst($arg);
-        } elseif ($k == 2) {
-            $arguments['action'] = $arg;
-        } elseif ($k >= 3) {
-            $arguments['params'][] = $arg;
-        }
-    }
-
-    /**
      * Create a console application
      */
     $console = new ConsoleApp($di);
@@ -71,6 +56,20 @@ try {
      */
     $di->setShared('console', $console);
     include APP_PATH . '/config/cron.php';
+
+    /**
+     * Process the console arguments
+     */
+    $arguments = [];
+    foreach ($argv as $k => $arg) {
+        if ($k == 1) {
+            $arguments['task'] = "\\app\\tasks\\" . ucfirst($arg);
+        } elseif ($k == 2) {
+            $arguments['action'] = $arg;
+        } elseif ($k >= 3) {
+            $arguments['params'][] = $arg;
+        }
+    }
 
     /**
      * Handle

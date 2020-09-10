@@ -5,7 +5,6 @@ namespace app\services;
 use Phalcon\Di;
 use Phalcon\Http\Response;
 use Resque;
-use Throwable;
 
 class UtilService
 {
@@ -300,15 +299,6 @@ class UtilService
     }
 
     /**
-     * 判断是否为命令行环境
-     * @return bool
-     */
-    public static function isCli(): bool
-    {
-        return false !== stripos(PHP_SAPI, 'cli');
-    }
-
-    /**
      * 频率限制
      * @param string $key
      * @param int $interval
@@ -390,48 +380,6 @@ class UtilService
     }
 
     /**
-     * 获取非截取异常信息
-     * @param Throwable $e
-     * @return string
-     */
-    public static function getStringTrace(Throwable $e): string
-    {
-        $traces = $e->getTrace();
-        $traceStrings = [];
-        foreach ($traces as $k => $trace) {
-            $traceString = "#{$k} ";
-            if (isset($trace['file'])) {
-                $traceString .= $trace['file'] . ':' . $trace['line'] . ' ';
-            }
-
-            if (isset($trace['class'])) {
-                $traceString .= $trace['class'] . $trace['type'];
-            }
-
-            if (isset($trace['function'])) {
-                $traceString .= $trace['function'];
-            }
-
-            if (isset($trace['args'])) {
-                $trace['args'] = array_map(function ($item) {
-                    if (is_object($item)) {
-                        return  get_class($item);
-                    }
-                    return preg_replace(["/\n/", '/ +/'], ' ', var_export($item, true));
-                }, $trace['args']);
-                $trace['args'] = implode(', ', $trace['args']);
-            } else {
-                $trace['args'] = '';
-            }
-            $traceString .=  "({$trace['args']})";
-
-            $traceStrings[] = $traceString;
-        }
-
-        return $e->getMessage() . " \n" . implode(" \n", $traceStrings);
-    }
-
-    /**
      * 文件是否为图片
      * @param string $src
      * @return bool
@@ -442,6 +390,20 @@ class UtilService
         $mimeType = @exif_imagetype($src);
 
         return in_array($mimeType, $whitelistImageTypes);
+    }
+
+    /**
+     * 获取步长截止时间
+     * @param int $step 步长(分钟)
+     * @return int
+     */
+    public static function getNextDeadline(int $step = 1): int
+    {
+        $minute = date('i');
+        $period = $step - $minute % $step;
+        $deadline = date('Y-m-d H:i:00', time() + $period * 60);
+
+        return strtotime($deadline);
     }
 
     /**

@@ -11,12 +11,21 @@ class UserController extends Controller
 {
     public function getUsers(): Response
     {
+        $key = 'users';
+        $result = $this->cache->get($key);
+        if ($result) {
+            return UtilService::successResponse(200, unserialize($result));
+        }
+
         $result = UtilService::getPageItems([
             'select' => 'u.user_id, u.user_name, uc.counts',
             'from' => 'users AS u JOIN user_counts AS uc ON u.user_id = uc.user_id',
             'where' => '1',
             'orderBy' => 'u.user_id DESC'
         ]);
+
+        $this->cache->set($key, serialize($result));
+        $this->cache->expireAt($key, UtilService::getNextDeadline(7));
 
         return UtilService::successResponse(200, $result);
     }
