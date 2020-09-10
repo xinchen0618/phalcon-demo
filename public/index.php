@@ -105,9 +105,9 @@ try {
      */
     preg_match('/\/v\d+\//', $_SERVER['REQUEST_URI'], $version);
     if ($version) {
-        $module = ltrim(strstr($_SERVER['REQUEST_URI'], $version[0], true), '/');   // e.g. admin_order
-        $version = trim($version[0], '/');  // e.g. v1
-        $routeFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';    // e.g. admin_order.php
+        $module = ltrim(strstr($_SERVER['REQUEST_URI'], $version[0], true), '/');
+        $version = trim($version[0], '/');
+        $routeFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';
         if (is_file($routeFile)) {
             include $routeFile;
         }
