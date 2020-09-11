@@ -1,6 +1,6 @@
 <?php
 /**
- * 公共load
+ * Common load
  */
 
 use Phalcon\Loader;

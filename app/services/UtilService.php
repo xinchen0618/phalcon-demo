@@ -303,7 +303,7 @@ class UtilService
      * @param string $key
      * @param int $interval
      */
-    public static function speedLimit(string $key = '', int $interval = 2): void
+    public static function speedLimit(string $key = '', int $interval = 3): void
     {
         $di = Di::getDefault();
         if (!$key) {

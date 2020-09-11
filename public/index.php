@@ -117,6 +117,7 @@ try {
      * Handle the request
      */
     $app->handle($_SERVER['REQUEST_URI']);
+
 } catch (Throwable $e) {
     $message = $e->getMessage() . " \n" . $e->getTraceAsString() . " \n";
     error_log($message);
