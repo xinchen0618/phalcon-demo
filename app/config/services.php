@@ -19,12 +19,12 @@ $di->setShared('db', function () {
 });
 
 /**
- * cache
+ * cache, redis长连接
  */
 $di->setShared('cache', function () {
     $redisConfig = $this->getConfig()->redis;
     $cache = new Redis();
-    $cache->connect($redisConfig->host, $redisConfig->port);
+    $cache->pconnect($redisConfig->host, $redisConfig->port);
     if ($redisConfig->auth) {
         $cache->auth($redisConfig->auth);
     }
@@ -34,12 +34,12 @@ $di->setShared('cache', function () {
 });
 
 /**
- * redis存储
+ * redis存储, redis长连接
  */
 $di->setShared('redis', function () {
     $redisConfig = $this->getConfig()->redis;
     $redis = new Redis();
-    $redis->connect($redisConfig->host, $redisConfig->port);
+    $redis->pconnect($redisConfig->host, $redisConfig->port);
     if ($redisConfig->auth) {
         $redis->auth($redisConfig->auth);
     }
@@ -49,7 +49,7 @@ $di->setShared('redis', function () {
 });
 
 /**
- * 队列Redis
+ * 消息队列redis
  */
 $di->setShared('queueRedis', function () {
     $redisConfig = $this->getConfig()->redis;
@@ -64,7 +64,7 @@ $di->setShared('queueRedis', function () {
 });
 
 /**
- * session
+ * session, redis长连接
  */
 $di->setShared('session', function () {
     $redisConfig = $this->getConfig()->redis;
@@ -73,7 +73,8 @@ $di->setShared('session', function () {
         'port' => $redisConfig->port,
         'auth' => $redisConfig->auth,
         'index' => $this->getConfig()->redisDbIndex->session,
-        'lifetime' => 86400 * 30
+        'lifetime' => 86400 * 30,
+        'persistent' => true
     ];
 
     $session = new Phalcon\Session\Manager();

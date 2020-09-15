@@ -129,8 +129,12 @@ class MainTask extends Task
         $this->db->commit();
     }
 
-    public function classAction(): void
+    public function redisTestAction(): void
     {
-        var_export(UserService::class);
+        $key = 'aaa:test';
+        $this->redis->set($key, '123', 3600);
+
+        sleep(30);
+        echo $this->redis->get($key);
     }
 }
