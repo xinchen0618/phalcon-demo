@@ -77,13 +77,6 @@ try {
     }
 
     /**
-     * POST防重
-     */
-    if ('POST' === $_SERVER['REQUEST_METHOD']) {
-        UtilService::speedLimit();
-    }
-
-    /**
      * Starting the application
      * Assign service locator to the application
      */

@@ -49,21 +49,6 @@ $di->setShared('redis', function () {
 });
 
 /**
- * 消息队列redis
- */
-$di->setShared('queueRedis', function () {
-    $redisConfig = $this->getConfig()->redis;
-    $redis = new Redis();
-    $redis->connect($redisConfig->host, $redisConfig->port);
-    if ($redisConfig->auth) {
-        $redis->auth($redisConfig->auth);
-    }
-    $redis->select($this->getConfig()->redisDbIndex->queue);
-
-    return $redis;
-});
-
-/**
  * session, redis长连接
  */
 $di->setShared('session', function () {
@@ -92,4 +77,19 @@ $di->setShared('session', function () {
     $session->setAdapter($redis)->start();
 
     return $session;
+});
+
+/**
+ * 消息队列redis
+ */
+$di->setShared('queueRedis', function () {
+    $redisConfig = $this->getConfig()->redis;
+    $redis = new Redis();
+    $redis->connect($redisConfig->host, $redisConfig->port);
+    if ($redisConfig->auth) {
+        $redis->auth($redisConfig->auth);
+    }
+    $redis->select($this->getConfig()->redisDbIndex->queue);
+
+    return $redis;
 });
