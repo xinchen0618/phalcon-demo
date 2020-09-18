@@ -32,6 +32,8 @@ class UserController extends Controller
 
     public function postUsers(): Response
     {
+        UtilService::speedLimit();
+
         $json = UtilService::getJsonBody(['user_name:用户名:string:+']);
 
         $this->db->begin();

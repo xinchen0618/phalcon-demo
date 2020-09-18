@@ -89,11 +89,11 @@ try {
 
     /**
      * Dynamic loading
-     * 默认v1, 其他版本加版本号, 蛇形式命名
+     * Module/Route 蛇形式命名
      * example:
      *      Module:
      *          /admin_order/v1, /admin_order/v2
-     *      Route:
+     *      Route 默认v1, 其他版本加版本号:
      *          app/routes/admin_order.php, app/routes/admin_order_v2.php
      */
     preg_match('/\/v\d+\//', $_SERVER['REQUEST_URI'], $version);

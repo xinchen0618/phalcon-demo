@@ -5,6 +5,7 @@ namespace app\services;
 use Phalcon\Di;
 use Phalcon\Http\Response;
 use Resque;
+use ResqueScheduler;
 
 class UtilService
 {
@@ -408,14 +409,14 @@ class UtilService
 
     /**
      * 入队异步任务
-     * @param string $queue 队列名
-     * @param string $service 服务名
-     * @param string $method 服务静态方法名
-     * @param array $params 静态方法参数
-     * @param bool $transaction 是否开启事务
+     * @param string $service     服务名
+     * @param string $method      服务静态方法名
+     * @param array  $params      静态方法参数
+     * @param bool   $transaction 是否开启事务
+     * @param string $queue       队列名
      * @return string|boolean
      */
-    public static function enqueue(string $queue, string $service, string $method, array $params = [], bool $transaction = false)
+    public static function enqueue(string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal')
     {
         if (null === Resque::$redis) {
             $config = Di::getDefault()->get('config');
@@ -423,6 +424,26 @@ class UtilService
         }
 
         return Resque::enqueue($queue, 'QueueJob', [$service, $method, $params, $transaction]);
+    }
+
+    /**
+     * 入队延迟异步任务
+     * @param int    $delay       延迟时间(秒)
+     * @param string $service     服务名
+     * @param string $method      服务静态方法名
+     * @param array  $params      静态方法参数
+     * @param bool   $transaction 是否开启事务
+     * @param string $queue       队列名
+     * @return void
+     */
+    public static function enqueueIn(int $delay, string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal'): void
+    {
+        if (null === Resque::$redis) {
+            $config = Di::getDefault()->get('config');
+            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+        }
+
+        ResqueScheduler::enqueueIn($delay, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
     }
 
 }

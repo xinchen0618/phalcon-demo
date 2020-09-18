@@ -2,11 +2,9 @@
 
 namespace app\tasks;
 
-use app\services\UserService;
 use app\services\UtilService;
 use Phalcon\Cli\Task;
 use Resque;
-use ResqueScheduler;
 
 class MainTask extends Task
 {
@@ -79,12 +77,12 @@ class MainTask extends Task
     }
 
     /**
-     * 入队
+     * 入消息队列
      */
     public function enqueueAction(): void
     {
         for ($i =0; $i < 10000; $i++) {
-            UtilService::enqueue('universal', 'UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
+            UtilService::enqueue('UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
         }
     }
 
@@ -111,30 +109,8 @@ class MainTask extends Task
     /**
      * 延迟队列任务
      */
-    public function delayQueueAction(): void
+    public function enqueueInAction(): void
     {
-        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redisDbIndex->queue, $this->config->redis->auth);
-
-        $args = ['UserService', 'postUsers', ['user_name' => 'delay_' . random_int(100000, 999999)], true];
-        ResqueScheduler::enqueueIn(30, 'universal', 'QueueJob', $args);
-    }
-
-    public function deleteUserAction(int $userId): void
-    {
-        $this->db->begin();
-
-        $result = UserService::deleteUser($userId);
-        var_export($result);
-
-        $this->db->commit();
-    }
-
-    public function redisTestAction(): void
-    {
-        $key = 'aaa:test';
-        $this->redis->set($key, '123', 3600);
-
-        sleep(30);
-        echo $this->redis->get($key);
+        UtilService::enqueueIn(30, 'UserService', 'postUsers', ['user_name' => 'delay_' . random_int(100000, 999999)], true);
     }
 }
