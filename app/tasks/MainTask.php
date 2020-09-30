@@ -5,6 +5,7 @@ namespace app\tasks;
 use app\services\UtilService;
 use Phalcon\Cli\Task;
 use Resque;
+use ResqueScheduler;
 
 class MainTask extends Task
 {
@@ -61,6 +62,48 @@ class MainTask extends Task
     }
 
     /**
+     * 手动执行异步任务
+     * @param string $service
+     * @param string $method
+     * @param string $params JSON字符串
+     * @param string $transaction true/false
+     */
+    public function doQueueAction(string $service, string $method, string $params = '', string $transaction = 'false'): void
+    {
+        $paramsArr = $params ? json_decode($params, true) : [];
+        $transactionBool = 'true' == $transaction;  // 命令行参数为字符串
+        $service = "\\app\\services\\{$service}";
+        $result = $service::$method($paramsArr, $transactionBool);
+        var_export($result);
+    }
+
+    /**
+     * 失败异步任务重新入队
+     * 重试间隔时间逐步加大, 持续12小时
+     */
+    public function reEnqueueAction(): void
+    {
+        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redisDbIndex->queue, $this->config->redis->auth);
+        do {
+            $job = $this->queueRedis->rPop('resque:failed');
+            if ($job) {
+                $job = json_decode($job, true);
+
+                // 入队参数, 索引数组 [string $service, string $method, array $params, bool $transaction, int $retriedCount]
+                $args = $job['payload']['args'][0];
+                $args[4] = isset($args[4]) ? $args[4] + 1 : 1;  // 已重试次数
+
+                if ($args[4] <= 20) {
+                    ResqueScheduler::enqueueIn($args[4] ** 3, $job['queue'], $job['payload']['class'], $args);
+                } else {
+                    unset($args[4]);
+                    error_log('异步任务执行失败: ' . var_export($args, true) . " \n");
+                }
+            }
+        } while ($job);
+    }
+
+    /**
      * 入队及时异步任务
      */
     public function enqueueAction(): void
@@ -85,41 +128,5 @@ class MainTask extends Task
     {
         $time = UtilService::getNextDeadline();
         UtilService::enqueueAt($time, 'UserService', 'postUsers', ['user_name' => 'timing_' . random_int(100000, 999999)], true);
-    }
-
-    /**
-     * 失败异步任务重新入队
-     */
-    public function reEnqueueAction(): void
-    {
-        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redisDbIndex->queue, $this->config->redis->auth);
-        do {
-            $job = $this->queueRedis->rPop('resque:failed');
-            if ($job) {
-                $job = json_decode($job, true);
-
-                // 入队参数, 索引数组 [string $service, string $method, array $params, bool $transaction, int $retriedCount]
-                $args = $job['payload']['args'][0];
-                $args[4] = isset($args[4]) ? $args[4] + 1 : 1;  // 已重试次数
-
-                Resque::enqueue($job['queue'], $job['payload']['class'], $args);
-            }
-        } while ($job);
-    }
-
-    /**
-     * 执行异步任务
-     * @param string $service
-     * @param string $method
-     * @param string $params JSON字符串
-     * @param string $transaction true/false
-     */
-    public function doQueueAction(string $service, string $method, string $params = '', string $transaction = 'false'): void
-    {
-        $paramsArr = $params ? json_decode($params, true) : [];
-        $transactionBool = 'true' == $transaction;  // 命令行参数为字符串
-        $service = "\\app\\services\\{$service}";
-        $result = $service::$method($paramsArr, $transactionBool);
-        var_export($result);
     }
 }
