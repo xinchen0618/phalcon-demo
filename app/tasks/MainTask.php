@@ -61,23 +61,7 @@ class MainTask extends Task
     }
 
     /**
-     * 执行队列格式任务
-     * @param string $service
-     * @param string $method
-     * @param string $params JSON字符串
-     * @param string $transaction 'true'/'false', 命令行参数只能是字符串
-     */
-    public function doQueueAction(string $service, string $method, string $params = '', string $transaction = 'false'): void
-    {
-        $params = $params ? json_decode($params, true) : [];
-        $transactionBool = 'true' == $transaction;
-        $service = "\\app\\services\\{$service}";
-        $result = $service::$method($params, $transactionBool);
-        var_export($result);
-    }
-
-    /**
-     * 入消息队列
+     * 入队及时异步任务
      */
     public function enqueueAction(): void
     {
@@ -87,7 +71,24 @@ class MainTask extends Task
     }
 
     /**
-     * 消息队列失败任务重新入队
+     * 入队延迟异步任务
+     */
+    public function enqueueInAction(): void
+    {
+        UtilService::enqueueIn(30, 'UserService', 'postUsers', ['user_name' => 'delay_' . random_int(100000, 999999)], true);
+    }
+
+    /**
+     * 入队定时异步任务
+     */
+    public function enqueueAtAction(): void
+    {
+        $time = UtilService::getNextDeadline();
+        UtilService::enqueueAt($time, 'UserService', 'postUsers', ['user_name' => 'timing_' . random_int(100000, 999999)], true);
+    }
+
+    /**
+     * 失败异步任务重新入队
      */
     public function reEnqueueAction(): void
     {
@@ -107,10 +108,18 @@ class MainTask extends Task
     }
 
     /**
-     * 延迟队列任务
+     * 执行异步任务
+     * @param string $service
+     * @param string $method
+     * @param string $params JSON字符串
+     * @param string $transaction true/false
      */
-    public function enqueueInAction(): void
+    public function doQueueAction(string $service, string $method, string $params = '', string $transaction = 'false'): void
     {
-        UtilService::enqueueIn(30, 'UserService', 'postUsers', ['user_name' => 'delay_' . random_int(100000, 999999)], true);
+        $paramsArr = $params ? json_decode($params, true) : [];
+        $transactionBool = 'true' == $transaction;  // 命令行参数为字符串
+        $service = "\\app\\services\\{$service}";
+        $result = $service::$method($paramsArr, $transactionBool);
+        var_export($result);
     }
 }

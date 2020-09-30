@@ -408,7 +408,7 @@ class UtilService
     }
 
     /**
-     * 入队异步任务
+     * 入队及时异步任务
      * @param string $service     服务名
      * @param string $method      服务静态方法名
      * @param array  $params      静态方法参数
@@ -444,6 +444,25 @@ class UtilService
         }
 
         ResqueScheduler::enqueueIn($delay, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
+    }
+
+    /**
+     * 入队定时异步任务
+     * @param mixed  $time          执行时间, timestamp/DateTime
+     * @param string $service       服务名
+     * @param string $method        服务静态方法名
+     * @param array  $params        静态方法参数
+     * @param bool   $transaction   是否开启事务
+     * @param string $queue         队列名
+     */
+    public static function enqueueAt($time, string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal'): void
+    {
+        if (null === Resque::$redis) {
+            $config = Di::getDefault()->get('config');
+            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+        }
+
+        ResqueScheduler::enqueueAt($time, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
     }
 
 }
