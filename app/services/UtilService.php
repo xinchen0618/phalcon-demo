@@ -328,8 +328,9 @@ class UtilService
      *      'select' => string,
      *      'from' => string,
      *      'where' => string,
-     *      'bindParams' => string,
      *      'groupBy' => string,
+     *      'having' => string,
+     *      'bindParams' => string,
      *      'orderBy' => string
      *  ]
      * @return array
@@ -348,9 +349,16 @@ class UtilService
         $db = Di::getDefault()->getDb();
 
         $bindParams = $query['bindParams'] ?? [];
+
         if (isset($query['groupBy'])) {
             $query['where'] .= " GROUP BY {$query['groupBy']}";
-            $countSql = "SELECT COUNT(*) FROM (SELECT {$query['groupBy']} FROM {$query['from']} WHERE {$query['where']}) AS t";
+        }
+        if (isset($query['having'])) {
+            $query['where'] .= " HAVING {$query['having']}";
+        }
+
+        if (isset($query['groupBy']) || stripos($query['select'], 'DISTINCT') === 0) {
+            $countSql = "SELECT COUNT(*) FROM (SELECT {$query['select']} FROM {$query['from']} WHERE {$query['where']}) AS t";
         } else {
             $countSql = "SELECT COUNT(*) FROM {$query['from']} WHERE {$query['where']}";
         }
