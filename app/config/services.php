@@ -28,7 +28,7 @@ $di->setShared('cache', function () {
     if ($redisConfig->auth) {
         $cache->auth($redisConfig->auth);
     }
-    $cache->select($this->getConfig()->redisDbIndex->cache);
+    $cache->select($redisConfig->index->cache);
 
     return $cache;
 });
@@ -43,7 +43,7 @@ $di->setShared('redis', function () {
     if ($redisConfig->auth) {
         $redis->auth($redisConfig->auth);
     }
-    $redis->select($this->getConfig()->redisDbIndex->redis);
+    $redis->select($redisConfig->index->redis);
 
     return $redis;
 });
@@ -57,7 +57,7 @@ $di->setShared('session', function () {
         'host' => $redisConfig->host,
         'port' => $redisConfig->port,
         'auth' => $redisConfig->auth,
-        'index' => $this->getConfig()->redisDbIndex->session,
+        'index' => $redisConfig->index->session,
         'lifetime' => 86400 * 30,
         'persistent' => true
     ];
@@ -89,7 +89,7 @@ $di->setShared('queueRedis', function () {
     if ($redisConfig->auth) {
         $redis->auth($redisConfig->auth);
     }
-    $redis->select($this->getConfig()->redisDbIndex->queue);
+    $redis->select($redisConfig->index->queue);
 
     return $redis;
 });

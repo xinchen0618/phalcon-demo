@@ -17,14 +17,12 @@ return [
         'host' => '127.0.0.1',
         'port' => 6379,
         'auth' => '',
-    ],
-
-    // Redis dbIndex 分配
-    'redisDbIndex' => [
-        'cache' => 0,       // 缓存
-        'redis' => 1,       // 存储
-        'session' => 2,     // SESSION
-        'queue' => 3,       // 队列
+        'index' => [
+            'cache' => 0,       // 缓存
+            'redis' => 1,       // 存储
+            'session' => 2,     // SESSION
+            'queue' => 3,       // 队列
+        ],
     ],
 
     // 跨域白名单

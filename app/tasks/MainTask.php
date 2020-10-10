@@ -83,7 +83,7 @@ class MainTask extends Task
      */
     public function reEnqueueAction(): void
     {
-        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redisDbIndex->queue, $this->config->redis->auth);
+        Resque::setBackend("{$this->config->redis->host}:{$this->config->redis->port}", $this->config->redis->index->queue, $this->config->redis->auth);
         do {
             $job = $this->queueRedis->rPop('resque:failed');
             if ($job) {
@@ -108,7 +108,7 @@ class MainTask extends Task
      */
     public function enqueueAction(): void
     {
-        for ($i =0; $i < 10000; $i++) {
+        for ($i =0; $i < 1000; $i++) {
             UtilService::enqueue('UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
         }
     }

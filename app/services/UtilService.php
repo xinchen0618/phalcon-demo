@@ -428,7 +428,7 @@ class UtilService
     {
         if (null === Resque::$redis) {
             $config = Di::getDefault()->get('config');
-            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
         }
 
         return Resque::enqueue($queue, 'QueueJob', [$service, $method, $params, $transaction]);
@@ -448,7 +448,7 @@ class UtilService
     {
         if (null === Resque::$redis) {
             $config = Di::getDefault()->get('config');
-            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
         }
 
         ResqueScheduler::enqueueIn($delay, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
@@ -467,7 +467,7 @@ class UtilService
     {
         if (null === Resque::$redis) {
             $config = Di::getDefault()->get('config');
-            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
         }
 
         ResqueScheduler::enqueueAt($time, $queue, 'QueueJob', [$service, $method, $params, $transaction]);

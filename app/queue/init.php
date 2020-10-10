@@ -39,5 +39,5 @@ include APP_PATH . '/config/loader.php';
  */
 if (null === Resque::$redis) {
     $config = $di->get('config');
-    Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redisDbIndex->queue, $config->redis->auth);
+    Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
 }
