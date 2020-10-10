@@ -427,8 +427,8 @@ class UtilService
     public static function enqueue(string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal')
     {
         if (null === Resque::$redis) {
-            $config = Di::getDefault()->get('config');
-            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
+            $redis = Di::getDefault()->get('config')->redis;
+            Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
         return Resque::enqueue($queue, 'QueueJob', [$service, $method, $params, $transaction]);
@@ -447,8 +447,8 @@ class UtilService
     public static function enqueueIn(int $delay, string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
-            $config = Di::getDefault()->get('config');
-            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
+            $redis = Di::getDefault()->get('config')->redis;
+            Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
         ResqueScheduler::enqueueIn($delay, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
@@ -466,8 +466,8 @@ class UtilService
     public static function enqueueAt($time, string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
-            $config = Di::getDefault()->get('config');
-            Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
+            $redis = Di::getDefault()->get('config')->redis;
+            Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
         ResqueScheduler::enqueueAt($time, $queue, 'QueueJob', [$service, $method, $params, $transaction]);

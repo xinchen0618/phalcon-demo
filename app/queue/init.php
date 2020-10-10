@@ -38,6 +38,6 @@ include APP_PATH . '/config/loader.php';
  * Note: the 'user' part of the DSN URI is required but is not used.
  */
 if (null === Resque::$redis) {
-    $config = $di->get('config');
-    Resque::setBackend("{$config->redis->host}:{$config->redis->port}", $config->redis->index->queue, $config->redis->auth);
+    $redis = $di->get('config')->redis;
+    Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
 }
