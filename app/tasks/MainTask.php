@@ -93,7 +93,7 @@ class MainTask extends Task
                 $args = $job['payload']['args'][0];
                 $args[4] = isset($args[4]) ? $args[4] + 1 : 1;  // 已重试次数
 
-                if ($args[4] <= 20) {
+                if ($args[4] <= 20) {   // 持续约12小时
                     ResqueScheduler::enqueueIn($args[4] ** 3, $job['queue'], $job['payload']['class'], $args);
                 } else {
                     unset($args[4]);
