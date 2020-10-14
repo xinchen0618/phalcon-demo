@@ -5,7 +5,7 @@ $di->set(
     function () {
         $cron = new \Sid\Phalcon\Cron\Manager();
 
-        // 消息队列失败任务重新入队
+        // 失败异步任务重新入队
         $cron->add(
             new \Sid\Phalcon\Cron\Job\Phalcon(
                 '* * * * *',
