@@ -78,8 +78,7 @@ class MainTask extends Task
     }
 
     /**
-     * 失败异步任务重新入队
-     * 重试间隔时间逐步加大, 持续12小时
+     * 失败队列重新入队
      */
     public function reEnqueueAction(): void
     {
@@ -88,17 +87,7 @@ class MainTask extends Task
             $job = $this->queueRedis->rPop('resque:failed');
             if ($job) {
                 $job = json_decode($job, true);
-
-                // 入队参数, 索引数组 [string $service, string $method, array $params, bool $transaction, int $retriedCount]
-                $args = $job['payload']['args'][0];
-                $args[4] = isset($args[4]) ? $args[4] + 1 : 1;  // 已重试次数
-
-                if ($args[4] <= 20) {   // 持续约12小时
-                    ResqueScheduler::enqueueIn($args[4] ** 3, $job['queue'], $job['payload']['class'], $args);
-                } else {
-                    unset($args[4]);
-                    error_log('异步任务执行失败: ' . var_export($args, true) . " \n");
-                }
+                Resque::enqueue($job['queue'], $job['payload']['class'], $job['payload']['args'][0]);
             }
         } while ($job);
     }
