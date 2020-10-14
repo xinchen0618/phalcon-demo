@@ -5,7 +5,6 @@ namespace app\tasks;
 use app\services\UtilService;
 use Phalcon\Cli\Task;
 use Resque;
-use ResqueScheduler;
 
 class MainTask extends Task
 {
@@ -97,7 +96,7 @@ class MainTask extends Task
      */
     public function enqueueAction(): void
     {
-        for ($i =0; $i < 1000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             UtilService::enqueue('UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
         }
     }
