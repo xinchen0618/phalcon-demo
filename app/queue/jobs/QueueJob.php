@@ -6,7 +6,7 @@ class QueueJob
 {
     public function perform(): void
     {
-        try {   // Work work work
+        try {   /* Work work work */
             [$service, $method] = $this->args;
             $params = $this->args[2] ?? [];
             $transaction = $this->args[3] ?? false;
@@ -23,7 +23,7 @@ class QueueJob
                 $db->commit();
             }
 
-        } catch (Throwable $e) {    // Retry
+        } catch (Throwable $e) {    /* Retry */
             error_log($e->getMessage() . " \n" . $e->getTraceAsString() . " \n");
 
             $this->args[4] = isset($this->args[4]) ? $this->args[4] + 1 : 1;    // retriedCount
