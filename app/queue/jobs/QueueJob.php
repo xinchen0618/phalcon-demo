@@ -27,7 +27,7 @@ class QueueJob
             error_log($e->getMessage() . " \n" . $e->getTraceAsString() . " \n");
 
             $this->args[4] = isset($this->args[4]) ? $this->args[4] + 1 : 1;    // retriedCount
-            if ($this->args[4] <= 20) {   // 持续约12小时
+            if ($this->args[4] <= 24) {   // 持续约25小时
                 ResqueScheduler::enqueueIn($this->args[4] ** 3, $this->queue, 'QueueJob', $this->args);
             } else {
                 unset($this->args[4]);
