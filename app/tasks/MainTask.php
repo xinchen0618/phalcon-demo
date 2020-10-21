@@ -93,10 +93,12 @@ class MainTask extends Task
 
     /**
      * 入队及时异步任务
+     * @param int $counts
+     * @throws \Exception
      */
-    public function enqueueAction(): void
+    public function enqueueAction(int $counts = 1000): void
     {
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < $counts; $i++) {
             UtilService::enqueue('UserService', 'postUsers', ['user_name' => random_int(100000, 999999)], true);
         }
     }
