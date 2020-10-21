@@ -22,10 +22,10 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 Resque::enqueue('queueName', 'QueueJob', $args);
 
 // 消费. 队列名
-INTERVAL=1 COUNT=100 QUEUE=queueName php /path_to_project/app/queue/resque
+(INTERVAL=1 COUNT=100 QUEUE=queueName php /path_to_project/app/queue/resque &> /dev/null &)
 
-// 延迟任务
-php /path_to_project/app/queue/resque-scheduler
+// 延迟队列
+(INTERVAL=1 php /path_to_project/app/queue/resque-scheduler &> /dev/null &)
 ```
 
 ### Cron
