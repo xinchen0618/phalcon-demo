@@ -90,6 +90,7 @@ class UtilService
      *  'array' - 数组
      *  'phone' - 电话号码
      *  'longitude' - 经度
+     *  'latitude' - 纬度
      *  'image[]' - 图片数组, 返回Json字符串
      *  'image' - 图片
      * @param bool $allowEmpty 是否允许为空
