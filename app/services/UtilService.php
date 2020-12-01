@@ -82,6 +82,7 @@ class UtilService
      * @param mixed $paramValue
      * @param mixed $valueType
      *  [] - 枚举
+     *  'int' - 整数
      *  '+int' - 正整数
      *  '!-int' - 非负整数
      *  'string' - 字符串, 去除Tag, 去除首尾空格
