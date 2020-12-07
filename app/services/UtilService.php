@@ -419,60 +419,71 @@ class UtilService
 
     /**
      * 入队及时异步任务
-     * @param string $service     服务名
-     * @param string $method      服务静态方法名
-     * @param array  $params      静态方法参数
-     * @param bool   $transaction 是否开启事务
-     * @param string $queue       队列名
+     * @param string $serviceName       服务名
+     * @param string $methodName        服务静态方法名
+     * @param array  $params            静态方法参数
+     * @param bool   $transaction       是否开启事务
+     * @param string $queue             队列名
      * @return string|boolean
      */
-    public static function enqueue(string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal')
+    public static function enqueue(string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')
     {
         if (null === Resque::$redis) {
             $redis = Di::getDefault()->get('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
-        return Resque::enqueue($queue, 'QueueJob', [$service, $method, $params, $transaction]);
+        return Resque::enqueue($queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
     }
 
     /**
      * 入队延迟异步任务
-     * @param int    $delay       延迟时间(秒)
-     * @param string $service     服务名
-     * @param string $method      服务静态方法名
-     * @param array  $params      静态方法参数
-     * @param bool   $transaction 是否开启事务
-     * @param string $queue       队列名
+     * @param int    $delay             延迟时间(秒)
+     * @param string $serviceName       服务名
+     * @param string $methodName        服务静态方法名
+     * @param array  $params            静态方法参数
+     * @param bool   $transaction       是否开启事务
+     * @param string $queue             队列名
      * @return void
      */
-    public static function enqueueIn(int $delay, string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal'): void
+    public static function enqueueIn(int $delay, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
             $redis = Di::getDefault()->get('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
-        ResqueScheduler::enqueueIn($delay, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
+        ResqueScheduler::enqueueIn($delay, $queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
     }
 
     /**
      * 入队定时异步任务
-     * @param mixed  $time          执行时间, timestamp/DateTime
-     * @param string $service       服务名
-     * @param string $method        服务静态方法名
-     * @param array  $params        静态方法参数
-     * @param bool   $transaction   是否开启事务
-     * @param string $queue         队列名
+     * @param mixed  $time              执行时间, timestamp/DateTime
+     * @param string $serviceName       服务名
+     * @param string $methodName        服务静态方法名
+     * @param array  $params            静态方法参数
+     * @param bool   $transaction       是否开启事务
+     * @param string $queue             队列名
      */
-    public static function enqueueAt($time, string $service, string $method, array $params = [], bool $transaction = false, string $queue = 'universal'): void
+    public static function enqueueAt($time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
             $redis = Di::getDefault()->get('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
-        ResqueScheduler::enqueueAt($time, $queue, 'QueueJob', [$service, $method, $params, $transaction]);
+        ResqueScheduler::enqueueAt($time, $queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
     }
 
+    /**
+     * 获取纳秒
+     * @return string
+     * @throws \Exception
+     */
+    public static function nanotime(): string
+    {
+        $time = explode(' ', microtime());
+
+        return $time[1] . '.' . $time[0] * 1000000 . random_int(100, 999);
+    }
 }

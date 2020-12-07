@@ -44,4 +44,13 @@ class UserService
 
         return [204];
     }
+
+    /**
+     * @param array $user
+     * @throws \Exception
+     */
+    public static function softDeleteUser(array $user): void
+    {
+        Di::getDefault()->get('db')->updateAsDict('users', ['is_deleted' => 1, 'deleted_nanotime' => UtilService::nanotime()], "user_id = {$user['user_id']} AND is_deleted = 0");
+    }
 }
