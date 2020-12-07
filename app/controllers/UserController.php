@@ -58,7 +58,7 @@ class UserController extends Controller
 
         $users = $this->db->fetchAll("SELECT user_id FROM users WHERE user_id <= {$json['user_counts']} AND is_deleted = 0");
         foreach ($users as $user) {
-            UtilService::enqueue('UserService', 'softDeleteUser', $user, false);
+            UtilService::enqueue('UserService', 'softDeleteUser', $user);
         }
 
         return UtilService::successResponse(204);
