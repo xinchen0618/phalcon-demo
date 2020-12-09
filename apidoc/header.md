@@ -12,7 +12,7 @@
 
 - API地址
 
-  完整API地址: 域名 + Module + 版本 + API Method
+  完整API地址: 域名 + Module + 版本 + API Name
 
 - API请求示例:
 ```
