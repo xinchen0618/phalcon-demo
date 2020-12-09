@@ -24,8 +24,7 @@ class UserController extends Controller
             'orderBy' => 'u.user_id DESC'
         ]);
 
-        $this->cache->set($key, serialize($result));
-        $this->cache->expireAt($key, UtilService::getNextDeadline(7));
+        $this->cache->set($key, serialize($result), 180);
 
         return UtilService::successResponse(200, $result);
     }

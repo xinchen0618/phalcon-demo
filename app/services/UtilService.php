@@ -404,20 +404,6 @@ class UtilService
     }
 
     /**
-     * 获取步长截止时间
-     * @param int $step 步长(分钟)
-     * @return int
-     */
-    public static function getNextDeadline(int $step = 1): int
-    {
-        $minute = date('i');
-        $period = $step - $minute % $step;
-        $deadline = date('Y-m-d H:i:00', time() + $period * 60);
-
-        return strtotime($deadline);
-    }
-
-    /**
      * 入队及时异步任务
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名

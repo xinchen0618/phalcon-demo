@@ -116,7 +116,7 @@ class MainTask extends Task
      */
     public function enqueueAtAction(): void
     {
-        $time = UtilService::getNextDeadline();
+        $time = strtotime(date('Y-m-d H:i:00')) + 60;
         UtilService::enqueueAt($time, 'UserService', 'postUsers', ['user_name' => 'timing_' . random_int(100000, 999999)], true);
     }
 }
