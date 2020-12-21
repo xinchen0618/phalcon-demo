@@ -114,9 +114,8 @@ try {
 } catch (Throwable $e) {
     $message = $e->getMessage() . " \n" . $e->getTraceAsString() . " \n";
     error_log($message);
-    if ('prod' === getenv('RUNTIME_ENV')) {
-        $message = '服务异常, 请稍后重试';
-    }
+
+    $message = 'prod' === getenv('RUNTIME_ENV') ? '服务异常, 请稍后重试' : $message;
     (new Response())->setStatusCode(500)->setJsonContent(
         [
             'status' => 'Exception',

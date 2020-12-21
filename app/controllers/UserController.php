@@ -46,9 +46,13 @@ class UserController extends Controller
 
     public function deleteUsersById(int $userId): Response
     {
+        $this->db->begin();
+
         $result = UserService::deleteUser($userId);
 
-        return UtilService::response($result);
+        $this->db->commit();
+
+        return UtilService::uniformResponse($result);
     }
 
     public function putUsersDeleted(): Response

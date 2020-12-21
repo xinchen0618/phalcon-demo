@@ -2,12 +2,11 @@
 
 namespace app\services;
 
-use Phalcon\Di;
 use Phalcon\Http\Response;
 use Resque;
 use ResqueScheduler;
 
-class UtilService
+class UtilService extends BaseService
 {
     /**
      * 获取请求实体
@@ -17,7 +16,7 @@ class UtilService
      */
     public static function getJsonBody(array $params): array
     {
-        $json = Di::getDefault()->getRequest()->getJsonRawBody(true) ?: [];
+        $json = self::di('request')->getJsonRawBody(true) ?: [];
 
         $filterParams = [];
         if ($params) {
@@ -62,7 +61,7 @@ class UtilService
      */
     public static function getQuery(string $paramKey, string $paramName, $valueType, $defaultValue = null)
     {
-        $value = Di::getDefault()->getRequest()->getQuery($paramKey);
+        $value = self::di('request')->getQuery($paramKey);
         if (null === $value || '' === $value) {
             if (null !== $defaultValue) {
                 return $defaultValue;
@@ -252,7 +251,7 @@ class UtilService
      */
     public static function errorResponse(int $statusCode, string $status, string $message): void
     {
-        Di::getDefault()->getResponse()->setStatusCode($statusCode)->setJsonContent([
+        self::di('response')->setStatusCode($statusCode)->setJsonContent([
             'status' => $status,
             'message' => $message
         ])->send();
@@ -267,7 +266,7 @@ class UtilService
      */
     public static function successResponse(int $statusCode, array $content = []): Response
     {
-        $response = Di::getDefault()->getResponse()->setStatusCode($statusCode);
+        $response = self::di('response')->setStatusCode($statusCode);
         if ($content) {
             $response->setJsonContent($content);
         }
@@ -282,18 +281,18 @@ class UtilService
      *      错误返回-[int $statusCode, string $status, string $message]
      * @return Response
      */
-    public static function response(array $result): Response
+    public static function uniformResponse(array $result): Response
     {
         /* 错误返回 */
         if ($result[0] >= 400) {
-            return Di::getDefault()->getResponse()->setStatusCode($result[0])->setJsonContent([
+            return self::di('response')->setStatusCode($result[0])->setJsonContent([
                 'status' => $result[1],
                 'message' => $result[2]
             ]);
         }
 
         /* 成功返回 */
-        $response = Di::getDefault()->getResponse()->setStatusCode($result[0]);
+        $response = self::di('response')->setStatusCode($result[0]);
         if (isset($result[1]) && is_array($result[1])) {
             $response->setJsonContent($result[1]);
         }
@@ -308,16 +307,15 @@ class UtilService
      */
     public static function speedLimit(string $key = '', int $interval = 3): void
     {
-        $di = Di::getDefault();
         if (!$key) {
             $path = $_SERVER['REQUEST_URI'];
             if (strpos($path, '?')) {
                 $path = strstr($path, '?', true);
             }
-            $key = "{$_SERVER['REQUEST_METHOD']}:{$path}:" . $di->getSession()->getId();
+            $key = "{$_SERVER['REQUEST_METHOD']}:{$path}:" . self::di('session')->getId();
         }
 
-        $flag = $di->getRedis()->set($key, 1, ['nx', 'ex' => $interval]);
+        $flag = self::di('redis')->set($key, 1, ['nx', 'ex' => $interval]);
         if (!$flag) {
             self::errorResponse(429, 'SpeedLimit', '手快了, 请稍后~~');
         }
@@ -348,7 +346,6 @@ class UtilService
     {
         $page = self::getQuery('page', '页码', '+int', 1);
         $perPage = self::getQuery('per_page', '页大小', '+int', 12);
-        $db = Di::getDefault()->getDb();
 
         $bindParams = $query['bindParams'] ?? [];
 
@@ -364,7 +361,7 @@ class UtilService
         } else {
             $countSql = "SELECT COUNT(*) FROM {$query['from']} WHERE {$query['where']}";
         }
-        $counts = $db->fetchColumn($countSql, $bindParams);
+        $counts = self::di('db')->fetchColumn($countSql, $bindParams);
 
         $totalPages = ceil($counts / $perPage);
         $result = [
@@ -385,7 +382,7 @@ class UtilService
         }
         $sql .= " LIMIT {$offset}, {$perPage}";
 
-        $result['items'] = $db->fetchAll($sql, 2, $bindParams);
+        $result['items'] = self::di('db')->fetchAll($sql, 2, $bindParams);
 
         return $result;
     }
@@ -415,7 +412,7 @@ class UtilService
     public static function enqueue(string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')
     {
         if (null === Resque::$redis) {
-            $redis = Di::getDefault()->get('config')->redis;
+            $redis = self::di('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
@@ -435,7 +432,7 @@ class UtilService
     public static function enqueueIn(int $delay, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
-            $redis = Di::getDefault()->get('config')->redis;
+            $redis = self::di('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
@@ -454,7 +451,7 @@ class UtilService
     public static function enqueueAt($time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
-            $redis = Di::getDefault()->get('config')->redis;
+            $redis = self::di('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 

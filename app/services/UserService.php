@@ -2,9 +2,7 @@
 
 namespace app\services;
 
-use Phalcon\Di;
-
-class UserService
+class UserService extends BaseService
 {
     /**
      * 添加用户
@@ -13,15 +11,13 @@ class UserService
      */
     public static function postUsers(array $user): int
     {
-        $db = Di::getDefault()->get('db');
-
-        $userId = $db->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$user['user_name']}'");
+        $userId = self::di('db')->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$user['user_name']}'");
         if (!$userId) {
-            $db->insertAsDict('users', ['user_name' => $user['user_name']]);
-            $userId = $db->lastInsertId();
+            self::di('db')->insertAsDict('users', ['user_name' => $user['user_name']]);
+            $userId = self::di('db')->lastInsertId();
         }
         $sql = "INSERT INTO user_counts (user_id, counts) VALUES ({$userId}, 1) ON DUPLICATE KEY UPDATE counts = counts + 1";
-        $db->execute($sql);
+        self::di('db')->execute($sql);
 
         return $userId;
     }
@@ -32,15 +28,13 @@ class UserService
      */
     public static function deleteUser(int $userId): array
     {
-        $db = Di::getDefault()->get('db');
-
-        $user = $db->fetchOne("SELECT user_id FROM users WHERE user_id = {$userId}");
+        $user = self::di('db')->fetchOne("SELECT user_id FROM users WHERE user_id = {$userId}");
         if (!$user) {
             return [404, 'UserNotFound', '用户不存在'];
         }
 
-        $db->delete('users', "user_id = {$userId}");
-        $db->delete('user_counts', "user_id = {$userId}");
+        self::di('db')->delete('users', "user_id = {$userId}");
+        self::di('db')->delete('user_counts', "user_id = {$userId}");
 
         return [204];
     }
@@ -51,6 +45,6 @@ class UserService
      */
     public static function softDeleteUser(array $user): void
     {
-        Di::getDefault()->get('db')->updateAsDict('users', ['is_deleted' => 1, 'deleted_nanotime' => UtilService::nanotime()], "user_id = {$user['user_id']} AND is_deleted = 0");
+        self::di('db')->updateAsDict('users', ['is_deleted' => 1, 'deleted_nanotime' => UtilService::nanotime()], "user_id = {$user['user_id']} AND is_deleted = 0");
     }
 }
