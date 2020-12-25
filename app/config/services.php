@@ -3,6 +3,9 @@
 /**
  * Shared configuration service
  */
+
+use Phalcon\Session\Bag as SessionBag;
+
 $di->setShared('config', function () {
     $config = include APP_PATH . '/config/config.php';
 
@@ -77,6 +80,18 @@ $di->setShared('session', function () {
     $session->setAdapter($redis)->start();
 
     return $session;
+});
+$di->setShared('userSession', function () use ($di) {
+    $userSession = new SessionBag('user');
+    $userSession->setDI($di);
+
+    return $userSession;
+});
+$di->setShared('adminSession', function () use ($di) {
+    $adminSession = new SessionBag('admin');
+    $adminSession->setDI($di);
+
+    return $adminSession;
 });
 
 /**
