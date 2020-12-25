@@ -44,7 +44,7 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 
 ### Queue
 
-异步任务的底层即为消息队列. 耗时较长的写操作/高并发的写操作, 都应优先考虑使用异步任务处理.
+消息队列用来实现异步任务. 耗时较长的写操作/高并发的写操作, 都应优先考虑使用异步任务处理.
 
 - https://github.com/resque/php-resque
 

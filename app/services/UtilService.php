@@ -333,7 +333,6 @@ class UtilService extends BaseService
      *      'bindParams' => string,
      *      'orderBy' => string
      *  ]
-     * @param int   $cacheLife 缓存时间, 小于等于0不缓存
      *
      * @return array
      *  [
@@ -344,19 +343,10 @@ class UtilService extends BaseService
      *      'items' => array
      *  ]
      */
-    public static function getPageItems(array $query, int $cacheLife = 0): array
+    public static function getPageItems(array $query): array
     {
         $page = self::getQuery('page', '页码', '+int', 1);
         $perPage = self::getQuery('per_page', '页大小', '+int', 12);
-
-        // cache
-        if ($cacheLife > 0) {
-            $key = sprintf(REDIS_PAGE_ITEMS, md5(json_encode($query) . $page . $perPage));
-            $result = self::di('cache')->get($key);
-            if ($result) {
-                return unserialize($result);
-            }
-        }
 
         $bindParams = $query['bindParams'] ?? [];
         if (isset($query['groupBy'])) {
@@ -390,10 +380,6 @@ class UtilService extends BaseService
             $sql .= " LIMIT {$offset}, {$perPage}";
 
             $result['items'] = self::di('db')->fetchAll($sql, 2, $bindParams);
-        }
-
-        if ($cacheLife > 0) {
-            self::di('cache')->set($key, serialize($result), $cacheLife);
         }
 
         return $result;
