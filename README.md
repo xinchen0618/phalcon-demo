@@ -7,6 +7,7 @@
   - config/                 配置
     - cron.php              计划任务配置
     - services.php          Di注册服务
+    - redis_constant.php    redis key. redis key统一在此定义, 避免冲突. 
   - controllers/            控制器
   - queue/                  消息队列
   - routes/                 路由
