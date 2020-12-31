@@ -2,6 +2,7 @@
 
 ### 目录结构
 
+```
 - apidoc/                   API文档
 - app/
   - config/                 配置
@@ -20,9 +21,11 @@
     - UtilService.php       工具类
   - tasks/                  Cli任务
     - BaseTask.php          基础Task. 继承此类实现慢Task报警.
+    - CronTask.php          Cron入口
 - public/
   - index.php               Restful入口
 - run                       Cli入口
+```
 
 ### Restful
 
