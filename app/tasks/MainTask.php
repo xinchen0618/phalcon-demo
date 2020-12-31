@@ -3,10 +3,9 @@
 namespace app\tasks;
 
 use app\services\UtilService;
-use Phalcon\Cli\Task;
 use Resque;
 
-class MainTask extends Task
+class MainTask extends BaseTask
 {
     /**
      * 写redis
