@@ -8,7 +8,7 @@ return [
     'slowQueueDuration' => 10,
 
     // 慢Task耗时(秒), Task执行超过此时间将报警
-    'slowTaskDuration' => 3,
+    'slowTaskDuration' => 30,
 
     // MySQL
     'mysql' => [
