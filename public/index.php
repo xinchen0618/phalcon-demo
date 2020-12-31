@@ -85,6 +85,8 @@ try {
     /**
      * Include Application
      */
+    define('SLOW_API_DURATION', 3);     // 慢API耗时(秒), API执行超过此时间将报警
+    $apiStartTime = microtime(true);
     include APP_PATH . '/routes/app.php';
 
     /**
