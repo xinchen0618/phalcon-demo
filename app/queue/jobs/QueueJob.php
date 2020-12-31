@@ -4,6 +4,10 @@ use Phalcon\Di;
 
 class QueueJob
 {
+    public CONST SLOW_WORK_DURATION = 10;    // 慢任务(秒), 异步任务执行超过此时间将报警
+
+    public $workStartTime;
+
     public function perform(): void
     {
         try {   /* Work work work */
@@ -33,6 +37,21 @@ class QueueJob
                 unset($this->args[4]);
                 error_log('异步任务执行失败: ' . var_export($this->args, true) . " \n");
             }
+        }
+    }
+
+    public function setUp(): void
+    {
+        // ... Set up environment for this job
+        $this->workStartTime = microtime(true);
+    }
+
+    public function tearDown(): void
+    {
+        // ... Remove environment for this job
+        $workDuration = microtime(true) - $this->workStartTime;
+        if ($workDuration >= self::SLOW_WORK_DURATION) {
+            error_log("异步任务性能警告! 执行耗时: {$workDuration}. 任务内容: " . var_export($this->args, true) . " \n");
         }
     }
 }
