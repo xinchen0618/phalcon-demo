@@ -4,8 +4,6 @@ use Phalcon\Di;
 
 class QueueJob
 {
-    public CONST SLOW_WORK_DURATION = 10;    // 慢任务耗时(秒), 异步任务执行超过此时间将报警
-
     public $workStartTime;
 
     public function perform(): void
@@ -50,7 +48,7 @@ class QueueJob
     {
         // 慢异步任务警告
         $workDuration = microtime(true) - $this->workStartTime;
-        if ($workDuration > self::SLOW_WORK_DURATION) {
+        if ($workDuration > Di::getDefault()->get('config')->slowQueueDuration) {
             error_log("慢异步任务警告! 执行耗时: {$workDuration}秒. 任务内容: " . var_export($this->args, true) . " \n");
         }
     }

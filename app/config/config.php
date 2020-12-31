@@ -1,6 +1,12 @@
 <?php
 
 return [
+    // 慢API耗时(秒), API执行超过此时间将报警
+    'slowApiDuration' => 3,
+
+    // 慢任务耗时(秒), 异步任务执行超过此时间将报警
+    'slowQueueDuration' => 10,
+
     // MySQL
     'mysql' => [
         'host' => '127.0.0.1',
