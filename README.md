@@ -5,16 +5,21 @@
 - apidoc/                   API文档
 - app/
   - config/                 配置
+    - config.php            公共配置
     - cron.php              计划任务配置
     - services.php          Di注册服务
     - redis_constant.php    redis key. redis key统一在此定义, 避免冲突. 
   - controllers/            控制器
   - queue/                  消息队列
-  - routes/                 路由
+    - jobs/                 job处理类
+      - QueueJob.php        异步任务处理入口
+  - routes/                 Restful路由
+    - app.php               默认路由配置
   - services/               公共业务逻辑
     - BaseService.php       基础类. 继承此类即可使用 self::di() 调用Di注册的服务.
     - UtilService.php       工具类
   - tasks/                  Cli任务
+    - BaseTask.php          基础Task. 继承此类实现慢Task报警.
 - public/
   - index.php               Restful入口
 - run                       Cli入口
@@ -44,7 +49,7 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 
 ### Queue
 
-消息队列用来实现异步任务. 耗时较长的写操作/高并发的写操作, 都应优先考虑使用异步任务处理.
+消息队列用来实现异步任务. 长耗时写操作/高并发写操作, 都应优先考虑使用异步任务处理.
 
 - https://github.com/resque/php-resque
 
