@@ -1,6 +1,6 @@
 <?php
 
-use Phalcon\Di;
+use app\services\UtilService;
 
 class QueueJob
 {
@@ -14,15 +14,14 @@ class QueueJob
             $transaction = $this->args[3] ?? false;
 
             if ($transaction) {
-                $db = Di::getDefault()->get('db');
-                $db->begin();
+                UtilService::di('db')->begin();
             }
 
             $service = "\\app\\services\\{$service}";
             $service::$method($params);
 
             if ($transaction) {
-                $db->commit();
+                UtilService::di('db')->commit();
             }
 
         } catch (Throwable $e) {    /* Retry */
@@ -48,7 +47,7 @@ class QueueJob
     {
         // 慢异步任务警告
         $workDuration = microtime(true) - $this->workStartTime;
-        if ($workDuration > Di::getDefault()->get('config')->slowQueueDuration) {
+        if ($workDuration > UtilService::di('config')->slowQueueDuration) {
             error_log("慢异步任务警告! 执行耗时: {$workDuration}秒. 任务内容: " . var_export($this->args, true) . " \n");
         }
     }
