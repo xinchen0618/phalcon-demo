@@ -439,14 +439,14 @@ class UtilService extends BaseService
 
     /**
      * 入队定时异步任务
-     * @param mixed  $time              执行时间, timestamp/DateTime
+     * @param int    $time              执行时间, timestamp
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名
      * @param array  $params            静态方法参数
      * @param bool   $transaction       是否开启事务
      * @param string $queue             队列名
      */
-    public static function enqueueAt($time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
+    public static function enqueueAt(int $time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
             $redis = self::di('config')->redis;
