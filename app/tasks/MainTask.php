@@ -71,7 +71,17 @@ class MainTask extends BaseTask
         $paramsArr = $params ? json_decode($params, true) : [];
         $transactionBool = 'true' == $transaction;  // 命令行参数为字符串
         $service = "\\app\\services\\{$service}";
-        $result = $service::$method($paramsArr, $transactionBool);
+
+        if ($transactionBool) {
+            $this->db->begin();
+        }
+
+        $result = $service::$method($paramsArr);
+
+        if ($transactionBool) {
+            $this->db->commit();
+        }
+
         var_export($result);
     }
 
