@@ -63,7 +63,7 @@ try {
             $originLen = count($originHost);
             $originDomain = $originHost[$originLen - 2] . '.' . $originHost[$originLen - 1];
         }
-        $domainWhitelist = $di->getConfig()->domainWhitelist->toArray();
+        $domainWhitelist = $di->get('config')->domainWhitelist->toArray();
         if (in_array('*', $domainWhitelist, true) || in_array($originDomain, $domainWhitelist, true)) {
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
             header('Access-Control-Allow-Headers: accept, content-type, x-token');
