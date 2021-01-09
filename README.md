@@ -81,6 +81,13 @@ kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 
 - https://github.com/SidRoberts/phalcon-cron
 
+- 启动
+
+```
+// crontab -e
+* * * * * /usr/bin/php /path_to_project/run Cron
+```
+
 ### 性能
 
 - API执行超过3秒将报警

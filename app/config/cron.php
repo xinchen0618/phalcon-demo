@@ -8,7 +8,17 @@ $di->set(
     function () {
         $cron = new \Sid\Phalcon\Cron\Manager();
 
-
+        /* example
+        $cron->add(
+            new \Sid\Phalcon\Cron\Job\Phalcon(
+                '* * * * *',
+                [
+                    'task' => '\app\tasks\Main',
+                    'action' => 'reEnqueue'
+                ]
+            )
+        );
+        */
 
         return $cron;
     }
