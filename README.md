@@ -51,21 +51,24 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 
 ### Queue
 
-长耗时写操作/高并发写操作, 都应优先考虑使用队列处理. 队列任务的本质是执行 `app/services/` 中的静态方法.
+长耗时写操作/高并发写操作, 都应优先考虑使用队列处理. 队列任务的本质是异步执行 `app/services/` 中的静态方法.
+无特殊要求任务统一进入 `universal` 队列, 此队列拥有最多的worker待命. 其他队列共享较少数量的worker.
 
 - https://github.com/resque/php-resque
 
 - 定义
 
 ```
-// 生产. 队列名, Job, args => [string $serviceName, string $methodName, array $params, bool $transaction, int $retriedCount]
-Resque::enqueue('queueName', 'QueueJob', $args);
+// 生产. $args => [string $serviceName, string $methodName, array $params, bool $transaction, int $retriedCount]
+Resque::enqueue($queueName, 'QueueJob', $args);
 
-// 消费. 队列名
-(INTERVAL=1 COUNT=100 QUEUE=queueName php /path_to_project/app/queue/resque &> /dev/null &)
-
-// 延迟队列
+// 消费
+(INTERVAL=1 COUNT=100 QUEUE=universal php /path_to_project/app/queue/resque &> /dev/null &)
+(INTERVAL=1 COUNT=5 QUEUE=* php /path_to_project/app/queue/resque &> /dev/null &)
 (INTERVAL=1 php /path_to_project/app/queue/resque-scheduler &> /dev/null &)
+
+// 关闭队列
+kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 ```
 
 - 调用
