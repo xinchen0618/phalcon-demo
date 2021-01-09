@@ -16,7 +16,7 @@ $di->setShared('config', function () {
  * Database connection is created based in the parameters defined in the configuration file
  */
 $di->setShared('db', function () {
-    $config = $this->getConfig()->mysql->toArray();
+    $config = $this->get('config')->mysql->toArray();
 
     return new Phalcon\Db\Adapter\Pdo\Mysql($config);
 });
@@ -25,7 +25,7 @@ $di->setShared('db', function () {
  * cache, redis长连接
  */
 $di->setShared('cache', function () {
-    $redisConfig = $this->getConfig()->redis;
+    $redisConfig = $this->get('config')->redis;
     $cache = new Redis();
     $cache->pconnect($redisConfig->host, $redisConfig->port);
     if ($redisConfig->auth) {
@@ -40,7 +40,7 @@ $di->setShared('cache', function () {
  * redis存储, redis长连接
  */
 $di->setShared('redis', function () {
-    $redisConfig = $this->getConfig()->redis;
+    $redisConfig = $this->get('config')->redis;
     $redis = new Redis();
     $redis->pconnect($redisConfig->host, $redisConfig->port);
     if ($redisConfig->auth) {
@@ -55,7 +55,7 @@ $di->setShared('redis', function () {
  * session, redis长连接
  */
 $di->setShared('session', function () {
-    $redisConfig = $this->getConfig()->redis;
+    $redisConfig = $this->get('config')->redis;
     $options = [
         'host' => $redisConfig->host,
         'port' => $redisConfig->port,
@@ -70,7 +70,7 @@ $di->setShared('session', function () {
     $factory = new Phalcon\Storage\AdapterFactory($serializerFactory);
     $redis = new Phalcon\Session\Adapter\Redis($factory, $options);
 
-    $token = $this->getRequest()->getHeader('X-Token');
+    $token = $this->get('request')->getHeader('X-Token');
     if ($token && strlen($token) === 26) {
         $session->setId($token);
     }
@@ -81,15 +81,15 @@ $di->setShared('session', function () {
 
     return $session;
 });
-$di->setShared('userSession', function () use ($di) {
+$di->setShared('userSession', function () {
     $userSession = new SessionBag('user');
-    $userSession->setDI($di);
+    $userSession->setDI($this);
 
     return $userSession;
 });
-$di->setShared('adminSession', function () use ($di) {
+$di->setShared('adminSession', function () {
     $adminSession = new SessionBag('admin');
-    $adminSession->setDI($di);
+    $adminSession->setDI($this);
 
     return $adminSession;
 });
@@ -98,7 +98,7 @@ $di->setShared('adminSession', function () use ($di) {
  * 消息队列redis
  */
 $di->setShared('queueRedis', function () {
-    $redisConfig = $this->getConfig()->redis;
+    $redisConfig = $this->get('config')->redis;
     $redis = new Redis();
     $redis->connect($redisConfig->host, $redisConfig->port);
     if ($redisConfig->auth) {
