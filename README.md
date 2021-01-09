@@ -38,8 +38,6 @@
   - controllers 用于处理业务, 事务控制尽量放置在这里, 放置在services中容易出现事务嵌套的问题.
   - services 为可选, 用于封装公共的业务逻辑.
 
-### Cli
-
 ### ApiDoc
 
 - https://apidocjs.com/
@@ -76,6 +74,8 @@ kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
   - 及时队列任务 UtilService::enqueue()
   - 延迟队列任务 UtilService::enqueueIn()
   - 定时队列任务 UtilService::enqueueAt()
+
+### Cli
 
 ### Cron
 
