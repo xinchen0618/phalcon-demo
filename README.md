@@ -80,3 +80,9 @@ kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 ### Cron
 
 - https://github.com/SidRoberts/phalcon-cron
+
+### 性能
+
+- API执行超过3秒将报警
+- 队列任务执行超过10秒将报警
+- Task执行超过30秒将报警
