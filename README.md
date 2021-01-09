@@ -26,17 +26,17 @@
 - run                       Cli入口
 ```
 
-### Restful
+### RESTful
 
 - RESTful指南参考 <a href="https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api" target="_blank">Best Practices for Designing a Pragmatic RESTful API</a>
 
 - 流程
   
-  index.php -> routes -> controllers -> services
+  public/index.php -> app/routes/ -> app/controllers/ -> app/services/
   
-  - routes 为动态加载, 每次请求只会加载一个Module, 项目可以无限膨胀而不影响性能.
-  - controllers 用于处理业务, 事务控制尽量放置在这里, 放置在services中容易出现事务嵌套的问题.
-  - services 为可选, 用于封装公共的业务逻辑.
+  - `app/routes/` 为动态加载, 每次请求只会加载一个Module, 项目可以无限膨胀而不影响性能.
+  - `app/controllers/` 用于处理业务, 事务控制尽量放置在这里, 放置在 `app/services/` 中容易出现事务嵌套的问题.
+  - `app/services/` 为可选, 用于封装公共的业务逻辑.
 
 ### ApiDoc
 
