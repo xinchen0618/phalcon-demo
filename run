@@ -72,9 +72,19 @@ try {
     }
 
     /**
+     * Slow task
+     */
+    $taskStartTime = microtime(true);
+
+    /**
      * Handle
      */
     $console->handle($arguments);
+
+    $taskDuration = microtime(true) - $taskStartTime;
+    if ($taskDuration > $di->get('config')->slowTaskDuration) {
+        error_log("慢Task警告! 执行耗时: {$taskDuration}秒. Task: " . var_export($arguments, true) . " \n");
+    }
 
     /**
      * If configs is set to true, then we print a new line at the end of each execution

@@ -23,12 +23,3 @@ $app->notFound(function () use($app) {
         ]
     );
 });
-
-$app->after(function () use ($app, $apiStartTime) {
-    // 慢API警告
-    $apiDuration = microtime(true) - $apiStartTime;
-    if ($apiDuration > $app->config->slowApiDuration) {
-        $api = $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'];
-        error_log("慢API警告! 执行耗时: {$apiDuration}秒. API: {$api} \n");
-    }
-});

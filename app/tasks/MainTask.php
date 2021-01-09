@@ -3,9 +3,10 @@
 namespace app\tasks;
 
 use app\services\UtilService;
+use Phalcon\Cli\Task;
 use Resque;
 
-class MainTask extends BaseTask
+class MainTask extends Task
 {
     /**
      * 写redis
@@ -60,7 +61,7 @@ class MainTask extends BaseTask
     }
 
     /**
-     * 手动执行异步任务
+     * 手动执行队列任务
      * @param string $service
      * @param string $method
      * @param string $params JSON字符串
@@ -101,7 +102,7 @@ class MainTask extends BaseTask
     }
 
     /**
-     * 入队及时异步任务
+     * 入队及时队列任务
      * @param int $counts
      * @throws \Exception
      */
@@ -113,7 +114,7 @@ class MainTask extends BaseTask
     }
 
     /**
-     * 入队延迟异步任务
+     * 入队延迟队列任务
      */
     public function enqueueInAction(): void
     {
@@ -121,7 +122,7 @@ class MainTask extends BaseTask
     }
 
     /**
-     * 入队定时异步任务
+     * 入队定时队列任务
      */
     public function enqueueAtAction(): void
     {

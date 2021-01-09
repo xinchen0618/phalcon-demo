@@ -13,14 +13,13 @@
   - controllers/            控制器
   - queue/                  消息队列
     - jobs/                 job处理类
-      - QueueJob.php        异步任务处理入口
+      - QueueJob.php        队列任务处理入口
   - routes/                 Restful路由
     - app.php               默认路由配置
   - services/               公共业务逻辑
     - BaseService.php       基础类. 继承此类即可使用 self::di() 调用Di注册的服务.
     - UtilService.php       工具类
   - tasks/                  Cli任务
-    - BaseTask.php          基础Task. 继承此类实现慢Task报警.
     - CronTask.php          Cron入口
 - public/
   - index.php               Restful入口
@@ -52,7 +51,7 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 
 ### Queue
 
-消息队列用来实现异步任务. 长耗时写操作/高并发写操作, 都应优先考虑使用异步任务处理.
+长耗时写操作/高并发写操作, 都应优先考虑使用队列处理. 队列任务的本质是执行 `app/services/` 中的静态方法.
 
 - https://github.com/resque/php-resque
 
@@ -71,9 +70,9 @@ Resque::enqueue('queueName', 'QueueJob', $args);
 
 - 调用
 
-  - 及时异步任务 UtilService::enqueue()
-  - 延迟异步任务 UtilService::enqueueIn()
-  - 定时异步任务 UtilService::enqueueAt()
+  - 及时队列任务 UtilService::enqueue()
+  - 延迟队列任务 UtilService::enqueueIn()
+  - 定时队列任务 UtilService::enqueueAt()
 
 ### Cron
 

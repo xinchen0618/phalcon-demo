@@ -399,7 +399,7 @@ class UtilService extends BaseService
     }
 
     /**
-     * 入队及时异步任务
+     * 入队及时队列任务
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名
      * @param array  $params            静态方法参数
@@ -418,7 +418,7 @@ class UtilService extends BaseService
     }
 
     /**
-     * 入队延迟异步任务
+     * 入队延迟队列任务
      * @param int    $delay             延迟时间(秒)
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名
@@ -438,7 +438,7 @@ class UtilService extends BaseService
     }
 
     /**
-     * 入队定时异步任务
+     * 入队定时队列任务
      * @param int    $time              执行时间, timestamp
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名

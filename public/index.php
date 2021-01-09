@@ -85,7 +85,6 @@ try {
     /**
      * Include Application
      */
-    $apiStartTime = microtime(true);
     include APP_PATH . '/routes/app.php';
 
     /**
@@ -108,9 +107,19 @@ try {
     }
 
     /**
+     * Slow api
+     */
+    $apiStartTime = microtime(true);
+
+    /**
      * Handle the request
      */
     $app->handle($_SERVER['REQUEST_URI']);
+
+    $apiDuration = microtime(true) - $apiStartTime;
+    if ($apiDuration > $di->get('config')->slowApiDuration) {
+        error_log("慢API警告! 执行耗时: {$apiDuration}秒. API: {$_SERVER['REQUEST_METHOD']} {$_SERVER['REQUEST_URI']} \n");
+    }
 
 } catch (Throwable $e) {
     $message = $e->getMessage() . " \n" . $e->getTraceAsString() . " \n";
