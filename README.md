@@ -76,7 +76,7 @@ kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 
   - 入队及时队列任务 `UtilService::enqueue(string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
   - 入队延迟队列任务 `UtilService::enqueueIn(int $delay, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
-  - 入队定时队列任务 `UtilService::enqueueAt(int $time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
+  - 入队定时队列任务 `UtilService::enqueueAt(int $timestamp, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
 
 ### Cli
 
