@@ -50,7 +50,10 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 ### Queue
 
 长耗时写操作/高并发写操作, 都应优先考虑使用队列处理. 队列任务的本质是异步执行 `app/services/` 中的静态方法.
-无特殊要求任务统一进入 `universal` 队列, 此队列拥有最多的worker待命. 其他队列共享较少数量的worker.
+
+无特殊要求任务统一进入 `universal` 队列, 此队列拥有最多的worker待命. 数量大且优先级低的任务进入其他队列, 它们共享较少数量的worker.
+
+队列任务执行异常有重试机制, 重试的间隔时间会逐渐拉长, 持续约24小时. 因此队列任务要注意使用事务或做幂等校验.
 
 - https://github.com/resque/php-resque
 
