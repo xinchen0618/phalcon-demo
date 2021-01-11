@@ -439,7 +439,7 @@ class UtilService extends BaseService
 
     /**
      * 入队定时队列任务
-     * @param int    $timestamp         执行时间, timestamp
+     * @param int    $timestamp         执行时间, 时间戳
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名
      * @param array  $params            静态方法参数
