@@ -439,21 +439,21 @@ class UtilService extends BaseService
 
     /**
      * 入队定时队列任务
-     * @param int    $time              执行时间, timestamp
+     * @param int    $timestamp         执行时间, timestamp
      * @param string $serviceName       服务名
      * @param string $methodName        服务静态方法名
      * @param array  $params            静态方法参数
      * @param bool   $transaction       是否开启事务
      * @param string $queue             队列名
      */
-    public static function enqueueAt(int $time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
+    public static function enqueueAt(int $timestamp, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
         if (null === Resque::$redis) {
             $redis = self::di('config')->redis;
             Resque::setBackend("{$redis->host}:{$redis->port}", $redis->index->queue, $redis->auth);
         }
 
-        ResqueScheduler::enqueueAt($time, $queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
+        ResqueScheduler::enqueueAt($timestamp, $queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
     }
 
     /**

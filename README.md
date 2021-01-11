@@ -72,11 +72,11 @@ Resque::enqueue($queueName, 'QueueJob', $args);
 kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 ```
 
-- 调用
+- 使用
 
-  - 及时队列任务 UtilService::enqueue()
-  - 延迟队列任务 UtilService::enqueueIn()
-  - 定时队列任务 UtilService::enqueueAt()
+  - 入队及时队列任务 `UtilService::enqueue(string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
+  - 入队延迟队列任务 `UtilService::enqueueIn(int $delay, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
+  - 入队定时队列任务 `UtilService::enqueueAt(int $time, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')`
 
 ### Cli
 
