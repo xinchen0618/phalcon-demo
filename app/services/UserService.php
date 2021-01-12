@@ -2,20 +2,29 @@
 
 namespace app\services;
 
+use Throwable;
+
 class UserService extends BaseService
 {
     /**
      * 添加用户
      * @param array $user ['user_name' => '']
      * @return int
+     * @throws Throwable
      */
     public static function postUsers(array $user): int
     {
-        $userId = self::di('db')->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$user['user_name']}'");
-        if (!$userId) {
+        try {
             self::di('db')->insertAsDict('users', ['user_name' => $user['user_name']]);
             $userId = self::di('db')->lastInsertId();
+        } catch (Throwable $e) {
+            if (23000 == $e->getCode()) {
+                $userId = self::di('db')->fetchColumn("SELECT user_id FROM users WHERE user_name = '{$user['user_name']}'");
+            } else {
+                throw $e;
+            }
         }
+
         $sql = "INSERT INTO user_counts (user_id, counts) VALUES ({$userId}, 1) ON DUPLICATE KEY UPDATE counts = counts + 1";
         self::di('db')->execute($sql);
 
