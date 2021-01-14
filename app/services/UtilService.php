@@ -455,16 +455,4 @@ class UtilService extends BaseService
 
         ResqueScheduler::enqueueAt($timestamp, $queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
     }
-
-    /**
-     * 获取纳秒
-     * @return string
-     * @throws \Exception
-     */
-    public static function nanotime(): string
-    {
-        $time = explode(' ', microtime());
-
-        return $time[1] . '.' . $time[0] * 1000000 . random_int(100, 999);
-    }
 }

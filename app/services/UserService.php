@@ -54,6 +54,6 @@ class UserService extends BaseService
      */
     public static function softDeleteUser(array $user): void
     {
-        self::di('db')->updateAsDict('users', ['is_deleted' => 1, 'deleted_nanotime' => UtilService::nanotime()], "user_id = {$user['user_id']} AND is_deleted = 0");
+        self::di('db')->updateAsDict('users', ['is_deleted' => 1, 'deleted_time' => time()], "user_id = {$user['user_id']} AND is_deleted = 0");
     }
 }

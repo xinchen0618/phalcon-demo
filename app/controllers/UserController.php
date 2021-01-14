@@ -62,10 +62,7 @@ class UserController extends Controller
     {
         $json = UtilService::getJsonBody(['user_counts:删除数量:+int:+']);
 
-        $users = $this->db->fetchAll("SELECT user_id FROM users WHERE user_id <= {$json['user_counts']} AND is_deleted = 0");
-        foreach ($users as $user) {
-            UtilService::enqueue('UserService', 'softDeleteUser', $user);
-        }
+        $this->db->updateAsDict('users', ['is_deleted' => 1, 'deleted_time' => time()], "user_id <= {$json['user_counts']} AND is_deleted = 0");
 
         return UtilService::successResponse(204);
     }
