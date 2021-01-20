@@ -81,9 +81,9 @@ try {
      */
     $console->handle($arguments);
 
-    $taskDuration = microtime(true) - $taskStartTime;
-    if ($taskDuration > $di->get('config')->slowTaskDuration) {
-        error_log("慢Task警告! 执行耗时: {$taskDuration}秒. Task: " . var_export($arguments, true) . " \n");
+    $taskCost = microtime(true) - $taskStartTime;
+    if ($taskCost > $di->get('config')->slowTaskCost) {
+        error_log("慢Task警告! 执行耗时: {$taskCost}秒. Task: " . var_export($arguments, true) . " \n");
     }
 
     /**

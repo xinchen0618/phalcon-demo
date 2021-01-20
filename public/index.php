@@ -116,9 +116,9 @@ try {
      */
     $app->handle($_SERVER['REQUEST_URI']);
 
-    $apiDuration = microtime(true) - $apiStartTime;
-    if ($apiDuration > $di->get('config')->slowApiDuration) {
-        error_log("慢API警告! 执行耗时: {$apiDuration}秒. API: {$_SERVER['REQUEST_METHOD']} {$_SERVER['REQUEST_URI']} \n");
+    $apiCost = microtime(true) - $apiStartTime;
+    if ($apiCost > $di->get('config')->slowApiCost) {
+        error_log("慢API警告! 执行耗时: {$apiCost}秒. API: {$_SERVER['REQUEST_METHOD']} {$_SERVER['REQUEST_URI']} \n");
     }
 
 } catch (Throwable $e) {

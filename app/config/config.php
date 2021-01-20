@@ -2,13 +2,13 @@
 
 return [
     // 慢API耗时(秒), API执行超过此时间将报警
-    'slowApiDuration' => 3,
+    'slowApiCost' => 3,
 
     // 慢队列任务耗时(秒), 队列任务执行超过此时间将报警
-    'slowQueueDuration' => 10,
+    'slowQueueCost' => 10,
 
     // 慢Task耗时(秒), Task执行超过此时间将报警
-    'slowTaskDuration' => 30,
+    'slowTaskCost' => 30,
 
     // MySQL
     'mysql' => [

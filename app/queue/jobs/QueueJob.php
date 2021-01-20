@@ -25,9 +25,9 @@ class QueueJob
                 UtilService::di('db')->commit();
             }
 
-            $workDuration = microtime(true) - $workStartTime;
-            if ($workDuration > UtilService::di('config')->slowQueueDuration) {
-                error_log("慢Queue警告! 执行耗时: {$workDuration}秒. Queue: " . var_export($this->args, true) . " \n");
+            $workCost = microtime(true) - $workStartTime;
+            if ($workCost > UtilService::di('config')->slowQueueCost) {
+                error_log("慢Queue警告! 执行耗时: {$workCost}秒. Queue: " . var_export($this->args, true) . " \n");
             }
 
         } catch (Throwable $e) {    /* Retry */
