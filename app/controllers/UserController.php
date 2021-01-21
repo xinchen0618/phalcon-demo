@@ -22,7 +22,7 @@ class UserController extends Controller
 
         $result = UtilService::getPageItems([
             'select' => 'u.user_id, u.user_name, uc.counts',
-            'from' => 'users AS u JOIN user_counts AS uc ON u.user_id = uc.user_id',
+            'from' => 't_users AS u JOIN t_user_counts AS uc ON u.user_id = uc.user_id',
             'where' => '1',
             'orderBy' => 'u.user_id DESC'
         ]);
@@ -62,7 +62,7 @@ class UserController extends Controller
     {
         $json = UtilService::getJsonBody(['user_counts:删除数量:+int:+']);
 
-        $this->db->updateAsDict('users', ['is_deleted' => 1, 'deleted_time' => time()], "user_id <= {$json['user_counts']} AND is_deleted = 0");
+        $this->db->updateAsDict('t_users', ['is_deleted' => 1, 'deleted_time' => time()], "user_id <= {$json['user_counts']} AND is_deleted = 0");
 
         return UtilService::successResponse(204);
     }
