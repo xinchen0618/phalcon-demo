@@ -6,7 +6,7 @@
 - apidoc/                   API文档
 - app/
   - config/                 配置
-    - config.php            公共配置
+    - config.php            公共配置. 环境配置 `config_{$_SERVER['RUNTIME_ENV']}.php` 会覆盖同key名公共配置.
     - cron.php              计划任务配置
     - services.php          Di注册服务
     - redis_constant.php    redis key. redis key统一在此定义, 避免冲突. 

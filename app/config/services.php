@@ -10,7 +10,7 @@ $di->setShared('config', function () {
     $config = include APP_PATH . '/config/config.php';
 
     // 环境配置优先
-    if (isset($_SERVER['RUNTIME_ENV'])) {
+    if (isset($_SERVER['RUNTIME_ENV']) && is_file(APP_PATH . "/config/config_{$_SERVER['RUNTIME_ENV']}.php")) {
         $envConfig = include APP_PATH . "/config/config_{$_SERVER['RUNTIME_ENV']}.php";
         $config = array_merge($config, $envConfig);
     }
