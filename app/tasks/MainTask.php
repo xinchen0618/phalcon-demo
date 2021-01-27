@@ -129,4 +129,58 @@ class MainTask extends Task
         $time = strtotime(date('Y-m-d H:i:00')) + 60;
         UtilService::enqueueAt($time, 'UserService', 'postUsers', ['user_name' => 'timing_' . random_int(100000, 999999)], true);
     }
+
+    public function positionInitAction(int $counts = 10): void
+    {
+        for ($i = 0; $i < $counts; $i++) {
+            $this->db->insertAsDict('t_users', ['user_name' => random_int(100000, 999999)]);
+            $userId = $this->db->lastInsertId();
+            $this->db->updateAsDict('t_users', ['position' => $userId * 1024], "user_id = {$userId}");
+        }
+    }
+
+    public function dragPositionAction(int $userId, int $prevUserId): void
+    {
+        // 首位
+        if (!$prevUserId) {
+            $first = $this->db->fetchOne('SELECT position, user_id FROM t_users ORDER BY position LIMIT 1');
+            if ($first['user_id'] != $userId) {
+                $position = $first['position'] / 2;
+                $this->db->updateAsDict('t_users', ['position' => $position], "user_id = {$userId}");
+            }
+
+            return;
+        }
+
+        $prev = $this->db->fetchOne("SELECT user_id, position FROM t_users WHERE user_id = {$prevUserId}");
+        $next = $this->db->fetchOne("SELECT user_id, position FROM t_users WHERE position > {$prev['position']} ORDER BY position LIMIT 1");
+
+        // 两元素间
+        if ($prev && $next) {
+            $position = ($prev['position'] + $next['position']) / 2;
+            var_export($prev);
+            echo "\n";
+            var_export($next);
+            echo "\n";
+            var_export($position);
+            echo "\n";
+            $this->db->updateAsDict('t_users', ['position' => $position], "user_id = {$userId}");
+
+            return;
+        }
+
+        // 末尾
+        if ($prev && !$next) {
+            $last = $this->db->fetchOne('SELECT user_id FROM t_users ORDER BY user_id DESC LIMIT 1');
+            $position = ($prev['position'] + ($last['user_id'] + 1) * 1024) / 2;
+            $this->db->updateAsDict('t_users', ['position' => $position], "user_id = {$userId}");
+        }
+    }
+
+    public function getUsersAction(): void
+    {
+        $sql = 'SELECT * FROM t_users ORDER BY position LIMIT 5';
+        $users = $this->db->fetchAll($sql);
+        var_export($users);
+    }
 }
