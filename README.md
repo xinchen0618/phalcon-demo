@@ -7,7 +7,7 @@
 - app/
   - config/                 配置
     - config.php            公共配置. 环境配置 `config_{$_SERVER['RUNTIME_ENV']}.php` 会覆盖同key名公共配置.
-    - cron.php              计划任务配置
+    - cron_prod.php         生产环境计划任务配置. 计划任务配置按环境分开.
     - services.php          Di注册服务
     - redis_constant.php    redis key. redis key统一在此定义, 避免冲突. 
   - controllers/            控制器
@@ -25,6 +25,15 @@
   - index.php               Restful入口
 - run                       Cli入口
 ```
+
+### 环境定义
+
+  环境变量 `RUNTIME_ENV` 指定执行环境.
+  
+  - dev     开发环境
+  - test    测试环境
+  - stage   预发布环境
+  - prod    生产环境
 
 ### RESTful
 
@@ -87,8 +96,8 @@ kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 - 启动
 
 ```
-// crontab -e
-* * * * * /usr/bin/php /path_to_project/run Cron
+// crontab -e, 注意定义环境
+* * * * * RUNTIME_ENV=xxx /usr/bin/php /path_to_project/run Cron
 ```
 
 ### 性能

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 公共配置
+ */
 return [
     // 慢API耗时(秒), API执行超过此时间将报警
     'slowApiCost' => 3,

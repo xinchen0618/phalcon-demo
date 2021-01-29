@@ -55,7 +55,30 @@ try {
      * Cron
      */
     $di->setShared('console', $console);
-    include APP_PATH . '/config/cron.php';
+    $di->set(
+        'cron',
+        function () {
+            $cron = new \Sid\Phalcon\Cron\Manager();
+
+            if (isset($_SERVER['RUNTIME_ENV']) && is_file(APP_PATH . "/config/cron_{$_SERVER['RUNTIME_ENV']}.php")) {
+                $cronConfigs = include APP_PATH . "/config/cron_{$_SERVER['RUNTIME_ENV']}.php";
+                foreach ($cronConfigs as $cronConfig) {
+                    $cron->add(
+                        new \Sid\Phalcon\Cron\Job\Phalcon(
+                            $cronConfig['expression'],
+                            [
+                                'task' => $cronConfig['task'],
+                                'action' => $cronConfig['action'],
+                                'params' => $cronConfig['params'] ?? ''
+                            ]
+                        )
+                    );
+                }
+            }
+
+            return $cron;
+        }
+    );
 
     /**
      * Process the console arguments
