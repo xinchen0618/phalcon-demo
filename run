@@ -61,15 +61,15 @@ try {
             $cron = new \Sid\Phalcon\Cron\Manager();
 
             if (isset($_SERVER['RUNTIME_ENV']) && is_file(APP_PATH . "/config/cron_{$_SERVER['RUNTIME_ENV']}.php")) {
-                $cronConfigs = include APP_PATH . "/config/cron_{$_SERVER['RUNTIME_ENV']}.php";
-                foreach ($cronConfigs as $cronConfig) {
+                $cronTasks = include APP_PATH . "/config/cron_{$_SERVER['RUNTIME_ENV']}.php";
+                foreach ($cronTasks as $cronTask) {
                     $cron->add(
                         new \Sid\Phalcon\Cron\Job\Phalcon(
-                            $cronConfig['expression'],
+                            $cronTask['expression'],
                             [
-                                'task' => $cronConfig['task'],
-                                'action' => $cronConfig['action'],
-                                'params' => $cronConfig['params'] ?? []
+                                'task' => $cronTask['task'],
+                                'action' => $cronTask['action'],
+                                'params' => $cronTask['params'] ?? []
                             ]
                         )
                     );
