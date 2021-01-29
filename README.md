@@ -30,10 +30,10 @@
 
   环境变量 `RUNTIME_ENV` 指定执行环境.
   
-  - dev     开发环境
-  - test    测试环境
-  - stage   预发布环境
-  - prod    生产环境
+  - `dev`     开发环境
+  - `test`    测试环境
+  - `stage`   预发布环境
+  - `prod`    生产环境
 
 ### RESTful
 
