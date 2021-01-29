@@ -9,7 +9,7 @@ return [
         'expression' => '* * * * *',
         'task' => '\app\tasks\Main',
         'action' => 'reEnqueue',
-        'params' => ''      //  选填
+        'params' => []      //  选填
     ],
     */
 ];

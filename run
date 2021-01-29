@@ -69,7 +69,7 @@ try {
                             [
                                 'task' => $cronConfig['task'],
                                 'action' => $cronConfig['action'],
-                                'params' => $cronConfig['params'] ?? ''
+                                'params' => $cronConfig['params'] ?? []
                             ]
                         )
                     );
