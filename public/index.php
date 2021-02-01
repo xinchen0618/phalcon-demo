@@ -21,6 +21,7 @@ try {
 
     define('BASE_PATH', dirname(__DIR__));
     define('APP_PATH', BASE_PATH . '/app');
+    define('RUNTIME_ENV', $_SERVER['RUNTIME_ENV'] ?? '');
 
     /**
      * The FactoryDefault Dependency Injector automatically registers the services that
@@ -125,7 +126,7 @@ try {
     $message = $e->getMessage() . " \n" . $e->getTraceAsString() . " \n";
     error_log($message);
 
-    $message = 'prod' === getenv('RUNTIME_ENV') ? '服务异常, 请稍后重试' : $message;
+    $message = 'prod' === RUNTIME_ENV ? '服务异常, 请稍后重试' : $message;
     (new Response())->setStatusCode(500)->setJsonContent(
         [
             'status' => 'Exception',

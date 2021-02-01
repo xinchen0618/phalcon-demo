@@ -14,6 +14,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 
 define('BASE_PATH', dirname(__DIR__, 2));
 define('APP_PATH', BASE_PATH . '/app');
+define('RUNTIME_ENV', $_SERVER['RUNTIME_ENV'] ?? '');
 
 /**
  * The FactoryDefault Dependency Injector automatically registers the services that
