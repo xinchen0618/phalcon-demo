@@ -1,3 +1,5 @@
 .idea
 vendor/*
 composer.lock
+app/config/config_dev.php
+app/config/cron_dev.php
