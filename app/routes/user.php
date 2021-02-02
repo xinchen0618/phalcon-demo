@@ -5,15 +5,17 @@ use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
 $user = new MicroCollection();
 $user->setHandler(new UserController());
-$user->setPrefix('/user/v1');
+$user->setPrefix('/user');
 
 /**
- * @api {get} /users 获取用户列表
+ * @api {get} /v1/users 获取用户列表[Deprecated]
  * @apiName user_get_users
  * @apiVersion 1.0.0
  * @apiGroup user
  * @apiPermission X-Token
- * @apiDescription 获取用户列表
+ * @apiDescription 获取用户列表, page/per_page分页方式
+ *
+ * @apiDeprecated
  *
  * @apiParam (Query参数) {String}   [q='']          搜索, 昵称
  * @apiParam (Query参数) {Integer}  [page=1]        页码
@@ -41,10 +43,40 @@ $user->setPrefix('/user/v1');
  *      ]
  *  }
  */
-$user->get('/users', 'getUsers');
+$user->get('/v1/users', 'getUsers');
 
 /**
- * @api {post} /users 添加用户
+ * @api {get} /v1.1/users 获取用户列表
+ * @apiName user_get_users
+ * @apiVersion 1.1.0
+ * @apiGroup user
+ * @apiPermission X-Token
+ * @apiDescription 获取用户列表, offset/limit分页方式
+ *
+ * @apiParam (Query参数) {String}   [q='']        搜索, 昵称
+ * @apiParam (Query参数) {Integer}  [offset=0]    起始id, 0-首页
+ * @apiParam (Query参数) {Integer}  [limit=12]    返回记录数
+ *
+ * @apiSuccess {Integer}    next_offset         下一页起始id, -1-最后一页
+ * @apiSuccess {Object[]}   items               列表
+ * @apiSuccess {Integer}    items.user_id       用户id
+ * @apiSuccess {String}     items.nickname      昵称
+ * @apiSuccessExample 成功响应示例
+ *  HTTP/1.1 200 OK
+ *  {
+ *      "next_offset": 1,
+ *      "items": [
+ *          {
+ *              "user_id": 988,
+ *              "nickname": "小乔"
+ *          }
+ *      ]
+ *  }
+ */
+$user->get('/v1.1/users', 'getUsersByOffset');
+
+/**
+ * @api {post} /v1/users 添加用户
  * @apiName user_post_users
  * @apiVersion 1.0.0
  * @apiGroup user
@@ -64,10 +96,10 @@ $user->get('/users', 'getUsers');
  *      "user_id": 3
  *  }
  */
-$user->post('/users', 'postUsers');
+$user->post('/v1/users', 'postUsers');
 
 /**
- * @api {delete} /users/:user_id 删除用户
+ * @api {delete} /v1/users/:user_id 删除用户
  * @apiName user_delete_users_user_id
  * @apiVersion 1.0.0
  * @apiGroup user
@@ -81,10 +113,10 @@ $user->post('/users', 'postUsers');
  *
  * @apiError (Error 400) UserOrderNotEmpty 用户订单不为空
  */
-$user->delete('/users/{user_id:[1-9]\d*}', 'deleteUsersById');
+$user->delete('/v1/users/{user_id:[1-9]\d*}', 'deleteUsersById');
 
 /**
- * @api {put} /users/deleted 批量删除用户
+ * @api {put} /v1/users/deleted 批量删除用户
  * @apiName user_put_users_deleted
  * @apiVersion 1.0.0
  * @apiGroup user
@@ -100,6 +132,6 @@ $user->delete('/users/{user_id:[1-9]\d*}', 'deleteUsersById');
  * @apiSuccessExample 成功响应示例
  *  HTTP/1.1 204 No Content
  */
-$user->put('/users/deleted', 'putUsersDeleted');
+$user->put('/v1/users/deleted', 'putUsersDeleted');
 
 $app->mount($user);

@@ -35,11 +35,11 @@ curl -X POST \
 
 - Module
 
-项目由多Module组成, Module均单独维护版本
+项目由多Module组成, Module均单独维护
 
-Module | 版本 | 说明
----|---|---
-[account](#api-account)                 | v1    | 账户API           
+Module | 说明
+---|---
+[account](#api-account)             | 账户API           
 
 ### HTTP Headers
 

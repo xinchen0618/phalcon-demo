@@ -90,20 +90,18 @@ try {
 
     /**
      * Dynamic loading
-     * Module/Route 蛇形式命名
+     * Module/Route 蛇形式命名, Module名即为Route文件名
      * example:
      *      Module:
-     *          /admin_order/v1, /admin_order/v2
-     *      Route 默认v1, 其他版本加版本号:
-     *          app/routes/admin_order.php, app/routes/admin_order_v2.php
+     *          /admin_order/v1, /admin_order/v1.1, 版本在Route方法中控制, 为必填
+     *      Route:
+     *          app/routes/admin_order.php
      */
-    preg_match('/\/v\d+\//', $_SERVER['REQUEST_URI'], $version);
+    preg_match('/\/v[\d.]+\//', $_SERVER['REQUEST_URI'], $version);
     if ($version) {
         $module = ltrim(strstr($_SERVER['REQUEST_URI'], $version[0], true), '/');
-        $version = trim($version[0], '/');
-        $routeFile = APP_PATH . '/routes/' . $module . ('v1' == $version ? '' : "_{$version}") . '.php';
-        if (is_file($routeFile)) {
-            include $routeFile;
+        if (is_file(APP_PATH . "/routes/{$module}.php")) {
+            include APP_PATH . "/routes/{$module}.php";
         }
     }
 

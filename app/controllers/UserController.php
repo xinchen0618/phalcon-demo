@@ -32,6 +32,11 @@ class UserController extends Controller
         return UtilService::successResponse(200, $result);
     }
 
+    public function getUsersByOffset(): Response
+    {
+        return UtilService::successResponse(200, ['next_offset' => -1, 'items' => []]);
+    }
+
     public function postUsers(): Response
     {
         UtilService::speedLimit();
