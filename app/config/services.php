@@ -87,13 +87,13 @@ $di->setShared('session', function () {
 
     return $session;
 });
-$di->setShared('userSession', function () {
+$di->setShared('userSession', function () {     // 前端session
     $userSession = new SessionBag('user');
     $userSession->setDI($this);
 
     return $userSession;
 });
-$di->setShared('adminSession', function () {
+$di->setShared('adminSession', function () {    // 管理端session
     $adminSession = new SessionBag('admin');
     $adminSession->setDI($this);
 
