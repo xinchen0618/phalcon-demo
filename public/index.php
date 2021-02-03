@@ -93,7 +93,7 @@ try {
      * Module/Route 蛇形式命名, Module名即为Route文件名
      * example:
      *      Module:
-     *          /admin_order/v1, /admin_order/v1.1, 版本在Route方法中控制, 为必填
+     *          /admin_order/v1, /admin_order/v1.1, 版本在Route方法中控制, 为必填, API出现不向下兼容并且旧版仍需继续使用的情况, 才需新增版本号.
      *      Route:
      *          app/routes/admin_order.php
      */
