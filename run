@@ -56,30 +56,26 @@ try {
      * Cron
      */
     $di->setShared('console', $console);
-    $di->set(
-        'cron',
-        function () {
-            $cron = new \Sid\Phalcon\Cron\Manager();
-
-            if (is_file(APP_PATH . '/config/cron_' . RUNTIME_ENV .  '.php')) {
-                $cronTasks = include APP_PATH . '/config/cron_' . RUNTIME_ENV . '.php';
-                foreach ($cronTasks as $cronTask) {
-                    $cron->add(
-                        new \Sid\Phalcon\Cron\Job\Phalcon(
-                            $cronTask['expression'],
-                            [
-                                'task' => $cronTask['task'],
-                                'action' => $cronTask['action'],
-                                'params' => $cronTask['params'] ?? []
-                            ]
-                        )
-                    );
-                }
+    $di->set('cron', function () {
+        $cron = new \Sid\Phalcon\Cron\Manager();
+        if (is_file(APP_PATH . '/config/cron_' . RUNTIME_ENV .  '.php')) {
+            $cronTasks = include APP_PATH . '/config/cron_' . RUNTIME_ENV . '.php';
+            foreach ($cronTasks as $cronTask) {
+                $cron->add(
+                    new \Sid\Phalcon\Cron\Job\Phalcon(
+                        $cronTask['expression'],
+                        [
+                            'task' => $cronTask['task'],
+                            'action' => $cronTask['action'],
+                            'params' => $cronTask['params'] ?? []
+                        ]
+                    )
+                );
             }
-
-            return $cron;
         }
-    );
+
+        return $cron;
+    });
 
     /**
      * Process the console arguments
