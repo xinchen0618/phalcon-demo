@@ -24,7 +24,7 @@ curl -X POST \
   -d '{
     "order_id": 62,
     "content": "服务很满意"
-  }'测试 | https://api-testing.sfll.xyz
+  }'
 ```
 
 - 域名
