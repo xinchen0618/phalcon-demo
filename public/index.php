@@ -90,18 +90,24 @@ try {
 
     /**
      * Dynamic loading
-     * Module/Route 蛇形式命名, Module名即为Route文件名
+     * Module/Version/Route
      * example:
      *      Module:
-     *          /admin_order/v1, /admin_order/v1.1, 版本在Route方法中控制, 为必填, API出现不向下兼容并且旧版仍需继续使用的情况, 才需新增版本号.
+     *          蛇形式命名, 比如 /admin_order
+     *      Version:
+     *          Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1 版本在Route方法中控制, 为必填.
+     *          API出现不向下兼容并且旧版仍需继续使用的情况,~~嗯, 就是指APP,~~ 才需新增Minor或Revision版本号. 出现结构性变化, 新增Major版本号.
      *      Route:
-     *          app/routes/admin_order.php
+     *          Module名即为Route文件名, 默认v1, 其他版本加Major版本号. 比如 app/routes/admin_order.php, app/routes/admin_order_v2.php
      */
     preg_match('/\/v[\d.]+\//', $_SERVER['REQUEST_URI'], $version);
     if ($version) {
         $module = ltrim(strstr($_SERVER['REQUEST_URI'], $version[0], true), '/');
-        if (is_file(APP_PATH . "/routes/{$module}.php")) {
-            include APP_PATH . "/routes/{$module}.php";
+        $version = explode('.', trim($version[0], '/'));
+        $routeVersion = 'v1' == $version[0] ? '' : "_{$version[0]}";
+        $routeFile = APP_PATH . '/routes/' . $module . $routeVersion . '.php';
+        if (is_file($routeFile)) {
+            include $routeFile;
         }
     }
 
