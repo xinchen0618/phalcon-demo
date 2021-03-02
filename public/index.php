@@ -78,6 +78,18 @@ try {
     }
 
     /**
+     * Source验证
+     */
+    $pathWhitelist = $di->get('config')->pathWhitelist->toArray();
+    if (!in_array($_SERVER['REQUEST_URI'], $pathWhitelist)) {
+        $source = $di->get('request')->getHeader('X-Source');
+        $sourceWhitelist = $di->get('config')->sourceWhitelist->toArray();
+        if (!$source || !isset($sourceWhitelist[$source])) {
+            UtilService::errorResponse(400, 'InvalidSource', '无效请求来源');
+        }
+    }
+
+    /**
      * Starting the application
      * Assign service locator to the application
      */
@@ -96,7 +108,6 @@ try {
      *          蛇形式命名, 比如 /admin_order
      *      Version:
      *          Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1 版本在Route方法中控制, 为必填.
-     *          API出现不向下兼容并且旧版仍需继续使用的情况,~~嗯, 就是指APP,~~ 才需新增Minor或Revision版本号. 出现结构性变化, 新增Major版本号.
      *      Route:
      *          Module名即为Route文件名, 默认v1, 其他版本加Major版本号. 比如 app/routes/admin_order.php, app/routes/admin_order_v2.php
      */

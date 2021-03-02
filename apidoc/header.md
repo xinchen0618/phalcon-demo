@@ -8,6 +8,7 @@
 
   API统一使用严格数据类型校验 
 
+
 ### Endpoint
 
 - API地址
@@ -17,10 +18,10 @@
 - API请求示例:
 ```
 curl -X POST \
-  https://api.sfll.net/comment/v1/comments \
+  https://api.example.com/comment/v1/comments \
   -H 'Content-Type: application/json' \
-  -H 'X-Sfll-Token: vuomdg39uevkajtnismb68r407' \
-  -H 'X-Sfll-From: sfll-miniprogram' \
+  -H 'X-Token: vuomdg39uevkajtnismb68r407' \
+  -H 'X-Source: example-miniprogram' \
   -d '{
     "order_id": 62,
     "content": "服务很满意"
@@ -31,15 +32,22 @@ curl -X POST \
 
 环境 | 域名
 ---|---
-生产 | https://api.sfll.xyz
+生产 | https://api.example.com
 
 - Module
 
-项目由多Module组成, Module均单独维护
+项目由多Module组成, Module均独立维护
 
 Module | 说明
 ---|---
 [account](#api-account)             | 账户API           
+
+- 版本
+
+Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1
+
+API出现不向下兼容且旧版仍需继续使用的情况, ~~嗯, 比如APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
+
 
 ### HTTP Headers
 
@@ -47,13 +55,14 @@ Module | 说明
 
 Header | 是否必填 | 说明
 ---|---|---
-X-Sfll-Token | 否 | 登录授权token
+X-Token | 否 | 登录授权token
 
-- 请求来源X-Sfll-From
+- 请求来源X-Source
 
 值 | 说明
 --- | ---
-sfll-miniprogram | 师傅来了小程序
+example-miniprogram | 示例小程序
+
 
 ### 错误码
 
@@ -74,8 +83,12 @@ HTTP/1.1 404 Not Found
  
 Http Status Code | status | message
 ---|---|---
-500 | Exception | 服务异常，请稍后重试 (非生产环境为异常详细信息)
-404 | ResourceNotFound | 您请求的资源不存在 (请求不存在的API返回此错误)
+500 | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详细信息)
+404 | ResourceNotFound      | 您请求的资源不存在 (请求不存在的API返回此错误)
+400 | InvalidSource         | 无效请求来源
+400 | InvalidParam          | 参数不正确 (类型校验不通过, 见message详情)
+400 | EmptyParam            | 参数不得为空 (缺少必填参数或必填参数传空值, 见message详情)
+429 | SpeedLimit            | 手快了, 请稍后~~
 
 - 业务错误码
 

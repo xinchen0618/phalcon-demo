@@ -41,4 +41,14 @@ return [
     'domainWhitelist' => [
         '*'
     ],
+
+    // 来源白名单
+    'sourceWhitelist' => [
+        'example-miniprogram' => '示例小程序',
+    ],
+
+    // path白名单, 不验证From的路径
+    'pathWhitelist' => [
+        '/order/v1/wxpay/wxa/notify',
+    ],
 ];
