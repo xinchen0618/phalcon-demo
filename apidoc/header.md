@@ -36,7 +36,7 @@ curl -X POST \
 
 - Module
 
-项目由多Module组成, Module均独立维护
+  项目由多Module组成, Module均独立维护
 
 Module | 说明
 ---|---
@@ -44,9 +44,9 @@ Module | 说明
 
 - 版本
 
-Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1
+  Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1
 
-API出现不向下兼容且旧版仍需继续使用的情况, ~~嗯, 比如APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
+  API出现不向下兼容且旧版仍需继续使用的情况, ~~嗯, 比如APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
 
 
 ### HTTP Headers
@@ -55,7 +55,8 @@ API出现不向下兼容且旧版仍需继续使用的情况, ~~嗯, 比如APP,~
 
 Header | 是否必填 | 说明
 ---|---|---
-X-Token | 否 | 登录授权token
+X-Token     | 否 | 登录授权token
+X-Source    | 是 | 请求来源
 
 - 请求来源X-Source
 
@@ -79,7 +80,7 @@ HTTP/1.1 404 Not Found
 
 - 公共错误码
 
-如下错误码被多API使用
+  如下错误码被多API使用
  
 Http Status Code | status | message
 ---|---|---
@@ -92,5 +93,5 @@ Http Status Code | status | message
 
 - 业务错误码
 
-API返回的特定错误码, 详见各API Error说明
+  API返回的特定错误码, 详见各API Error说明
 
