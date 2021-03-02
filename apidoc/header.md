@@ -80,8 +80,6 @@ HTTP/1.1 404 Not Found
 
 - 公共错误码
 
-  如下错误码被多API使用
- 
 Http Status Code | status | message
 ---|---|---
 500 | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详细信息)
@@ -93,5 +91,5 @@ Http Status Code | status | message
 
 - 业务错误码
 
-  API返回的特定错误码, 详见各API Error说明
+  详见各API Error说明
 
