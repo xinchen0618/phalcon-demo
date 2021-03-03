@@ -78,7 +78,7 @@ try {
     }
 
     /**
-     * Source验证
+     * 请求来源校验
      */
     $pathWhitelist = $di->get('config')->pathWhitelist->toArray();
     if (!in_array($_SERVER['REQUEST_URI'], $pathWhitelist)) {
