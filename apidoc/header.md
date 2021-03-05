@@ -82,7 +82,7 @@ HTTP/1.1 404 Not Found
 
 Http Status Code | status | message
 ---|---|---
-500 | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详细信息)
+500 | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详情)
 404 | ResourceNotFound      | 您请求的资源不存在 (请求不存在的API返回此错误)
 400 | InvalidSource         | 无效请求来源
 400 | InvalidParam          | 参数不正确 (类型校验不通过, 见message详情)
