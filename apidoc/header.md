@@ -46,7 +46,7 @@ Module | 说明
 
   Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1
 
-  API出现不向下兼容且旧版仍需继续使用的情况, ~~嗯, 比如APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
+  API出现向下不兼容且旧版仍需继续使用的情况, ~~嗯, 比如APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
 
 
 ### HTTP Headers
