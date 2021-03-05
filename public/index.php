@@ -107,7 +107,7 @@ try {
      *      Module:
      *          蛇形式命名, 比如 /admin_order
      *      Version:
-     *          Major.Minor[.Revision], 比如 /v1, /v1.1, /v2, /v2.1 版本在Route方法中控制, 为必填.
+     *          Major[.Minor][.Revision], 比如 /v1, /v1.1, /v2, /v2.1 版本在Route方法中控制, 为必填.
      *      Route:
      *          Module名即为Route文件名, 默认v1, 其他版本加Major版本号. 比如 app/routes/admin_order.php, app/routes/admin_order_v2.php
      */
