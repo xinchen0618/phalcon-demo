@@ -57,7 +57,7 @@ $user->get('/v1/users', 'getUsers');
  * @apiParam (Query参数) {Integer}  [offset=0]    起始id, 0-首页
  * @apiParam (Query参数) {Integer}  [limit=12]    返回记录数
  *
- * @apiSuccess {Integer}    next_offset         下一页起始id, -1-最后一页
+ * @apiSuccess {Integer}    next_offset         下一页起始id, -1-没有下一页了
  * @apiSuccess {Object[]}   items               列表
  * @apiSuccess {Integer}    items.user_id       用户id
  * @apiSuccess {String}     items.nickname      昵称
