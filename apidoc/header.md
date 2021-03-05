@@ -30,17 +30,17 @@
 
 - 域名
 
-  环境 | 域名
-  ---|---
-  生产 | https://api.example.com
+  环境    | 域名
+  ---    |---
+  生产    | https://api.example.com
 
 - Module
 
   项目由多Module组成, Module均独立维护
 
-  Module | 说明
-  ---|---
-  [account](#api-account)             | 账户API           
+  Module                                | 说明
+  ---                                   |---
+  [account](#api-account)               | 账户API           
 
 - 版本
 
@@ -53,16 +53,16 @@
 
 - 自定义专用Headers
 
-  Header | 是否必填 | 说明
-  ---|---|---
-  X-Token     | 否 | 登录授权token
-  X-Source    | 是 | 请求来源
+  Header        | 是否必填        | 说明
+  ---           |---             |---
+  X-Token       | 否             | 登录授权token
+  X-Source      | 是             | 请求来源
 
 - 请求来源X-Source
 
-  值 | 说明
-  --- | ---
-  example-miniprogram | 示例小程序
+  值                    | 说明
+  ---                   |---
+  example-miniprogram   | 示例小程序
 
 
 ### 错误码
@@ -81,14 +81,14 @@
 
 - 公共错误码
 
-  Http Status Code | status | message
-  ---|---|---
-  500 | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详情)
-  404 | ResourceNotFound      | 您请求的资源不存在 (请求不存在的API返回此错误)
-  400 | InvalidSource         | 无效请求来源
-  400 | InvalidParam          | 参数不正确 (类型校验不通过, 见message详情)
-  400 | EmptyParam            | 参数不得为空 (缺少必填参数或必填参数传空值, 见message详情)
-  429 | SpeedLimit            | 手快了, 请稍后~~
+  Http Status Code  | status                | message
+  ---               |---                    |---
+  500               | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详情)
+  404               | ResourceNotFound      | 您请求的资源不存在 (请求不存在的API返回此错误)
+  400               | InvalidSource         | 无效请求来源
+  400               | InvalidParam          | 参数不正确 (类型校验不通过, 见message详情)
+  400               | EmptyParam            | 参数不得为空 (缺少必填参数或必填参数传空值, 见message详情)
+  429               | SpeedLimit            | 手快了, 请稍后~~
 
 - 业务错误码
 
