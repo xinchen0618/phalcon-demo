@@ -51,10 +51,10 @@
 
 - https://apidocjs.com/
 
-```
-// 生成文档
-apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
-```
+  ```
+  // 生成文档
+  apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
+  ```
 
 ### Queue
 
@@ -68,18 +68,18 @@ apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
 
 - 定义
 
-```
-// 生产. $args => [string $serviceName, string $methodName, array $params, bool $transaction, int $retriedCount]
-Resque::enqueue($queueName, 'QueueJob', $args);
-
-// 消费, 注意定义环境
-(INTERVAL=1 COUNT=100 QUEUE=universal RUNTIME_ENV=xxx php /path_to_project/app/queue/resque &> /dev/null &)
-(INTERVAL=1 COUNT=5 QUEUE=* RUNTIME_ENV=xxx php /path_to_project/app/queue/resque &> /dev/null &)
-(INTERVAL=1 RUNTIME_ENV=xxx php /path_to_project/app/queue/resque-scheduler &> /dev/null &)
-
-// 关闭队列
-kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
-```
+  ```
+  // 生产. $args => [string $serviceName, string $methodName, array $params, bool $transaction, int $retriedCount]
+  Resque::enqueue($queueName, 'QueueJob', $args);
+  
+  // 消费, 注意定义环境
+  (INTERVAL=1 COUNT=100 QUEUE=universal RUNTIME_ENV=xxx php /path_to_project/app/queue/resque &> /dev/null &)
+  (INTERVAL=1 COUNT=5 QUEUE=* RUNTIME_ENV=xxx php /path_to_project/app/queue/resque &> /dev/null &)
+  (INTERVAL=1 RUNTIME_ENV=xxx php /path_to_project/app/queue/resque-scheduler &> /dev/null &)
+  
+  // 关闭队列
+  kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
+  ```
 
 - 使用
 
@@ -95,10 +95,10 @@ kill -QUIT $(ps aux | grep -v grep | grep /queue/resque | awk '{print $2}')
 
 - 启动
 
-```
-// crontab -e, 注意定义环境
-* * * * * RUNTIME_ENV=xxx /usr/bin/php /path_to_project/run Cron
-```
+  ```
+  // crontab -e, 注意定义环境
+  * * * * * RUNTIME_ENV=xxx /usr/bin/php /path_to_project/run Cron
+  ```
 
 ### 性能
 
