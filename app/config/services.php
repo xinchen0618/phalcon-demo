@@ -82,6 +82,7 @@ $di->setShared('session', function () {
     }
 
     session_set_cookie_params(86400 * 30);
+    session_name('SESSID');
 
     $session->setAdapter($redis)->start();
 
