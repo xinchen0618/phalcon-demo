@@ -41,11 +41,11 @@
 
 - 流程
   
-  `public/index.php` -> `app/routes/` -> `app/controllers/` -> `app/services/`
+  `public/index.php` -> `app/routes/` -> `app/controllers/` [-> `app/services/`]
   
   - `app/routes/` 为动态加载, 每次请求只会加载一个Module, 项目可以无限膨胀而不影响性能.
   - `app/controllers/` 用于处理业务, 事务控制尽量放置在这里, 放置在 `app/services/` 中容易出现事务嵌套的问题.
-  - `app/services/` 为可选, 用于封装公共的业务逻辑.
+  - `app/services/` 用于封装公共的业务逻辑, 为可选.
 
 ### ApiDoc
 
