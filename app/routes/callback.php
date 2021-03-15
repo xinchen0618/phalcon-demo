@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 第三方回调相关API
+ * 第三方回调API
  */
 
 use app\controllers\CallbackController;

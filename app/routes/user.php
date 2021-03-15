@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 用户相关API
+ * 用户API
  */
 
 use app\controllers\UserController;
