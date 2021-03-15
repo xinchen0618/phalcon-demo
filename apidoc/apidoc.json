@@ -7,6 +7,9 @@
     "title": "使用前必读",
     "filename": "apidoc/header.md"
   },
+  "template": {
+    "withGenerator": false
+  },
   "order": [
     "user",
     "callback"

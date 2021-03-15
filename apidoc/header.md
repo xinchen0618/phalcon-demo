@@ -47,7 +47,7 @@
 
   Major[.Minor][.Revision], 比如 /v1, /v1.1
 
-  API出现向下不兼容且旧版仍需继续使用的情况, ~~比如没有升级的旧版APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
+  API出现向下不兼容且旧版仍需继续使用的情况, ~~比如不升级的旧版APP,~~ 新增Minor或Revision版本号. 业务出现结构性变化, 新增Major版本号.
 
 
 ### HTTP Headers
