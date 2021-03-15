@@ -67,7 +67,7 @@ try {
         $domainWhitelist = $di->get('config')->domainWhitelist->toArray();
         if (in_array('*', $domainWhitelist, true) || in_array($originDomain, $domainWhitelist, true)) {
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
-            header('Access-Control-Allow-Headers: accept, content-type, x-token');
+            header('Access-Control-Allow-Headers: accept, content-type, x-token, x-source');
             header('Access-Control-Allow-Methods: GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH');
             header('Access-Control-Max-Age: ' . 86400 * 30);
             if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
