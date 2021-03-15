@@ -47,8 +47,6 @@ return [
         'example-miniprogram' => '示例小程序',
     ],
 
-    // Path白名单, 免请求来源校验的路径
-    'pathWhitelist' => [
-        '/order/v1/wxpay/wxa/notify',
-    ],
+    // Module白名单, 免请求来源校验
+    'moduleWhitelist' => ['callback'],
 ];

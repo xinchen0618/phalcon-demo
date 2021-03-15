@@ -6,5 +6,9 @@
   "header": {
     "title": "使用前必读",
     "filename": "apidoc/header.md"
-  }
+  },
+  "order": [
+    "user",
+    "callback"
+  ]
 }

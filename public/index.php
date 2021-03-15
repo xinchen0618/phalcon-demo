@@ -78,18 +78,6 @@ try {
     }
 
     /**
-     * 请求来源校验
-     */
-    $pathWhitelist = $di->get('config')->pathWhitelist->toArray();
-    if (!in_array($_SERVER['REQUEST_URI'], $pathWhitelist)) {
-        $source = $di->get('request')->getHeader('X-Source');
-        $sourceWhitelist = $di->get('config')->sourceWhitelist->toArray();
-        if (!$source || !isset($sourceWhitelist[$source])) {
-            UtilService::errorResponse(400, 'InvalidSource', '无效请求来源');
-        }
-    }
-
-    /**
      * Starting the application
      * Assign service locator to the application
      */
@@ -119,6 +107,18 @@ try {
         $routeFile = APP_PATH . '/routes/' . $module . $routeVersion . '.php';
         if (is_file($routeFile)) {
             include $routeFile;
+        }
+    }
+
+    /**
+     * 请求来源校验
+     */
+    $moduleWhitelist = $di->get('config')->moduleWhitelist->toArray();
+    if (empty($module) || !in_array($module, $moduleWhitelist)) {
+        $source = $di->get('request')->getHeader('X-Source');
+        $sourceWhitelist = $di->get('config')->sourceWhitelist->toArray();
+        if (!$source || !isset($sourceWhitelist[$source])) {
+            UtilService::errorResponse(400, 'InvalidSource', '无效请求来源');
         }
     }
 

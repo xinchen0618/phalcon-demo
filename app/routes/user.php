@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * 用户相关API
+ */
+
 use app\controllers\UserController;
 use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
