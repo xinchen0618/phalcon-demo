@@ -13,7 +13,7 @@ $user->setPrefix('/user');
 
 /**
  * @api {get} /v1/users 获取用户列表[Deprecated]
- * @apiName user:GetUsers
+ * @apiName userGetUsers
  * @apiVersion 1.0.0
  * @apiGroup user
  * @apiPermission 用户登录
@@ -51,7 +51,7 @@ $user->get('/v1/users', 'getUsers');
 
 /**
  * @api {get} /v1.1/users 获取用户列表
- * @apiName user:GetUsers
+ * @apiName userGetUsers
  * @apiVersion 1.1.0
  * @apiGroup user
  * @apiPermission 用户登录
@@ -81,10 +81,10 @@ $user->get('/v1.1/users', 'getUsersByOffset');
 
 /**
  * @api {post} /v1/users 添加用户
- * @apiName user:PostUsers
+ * @apiName userPostUsers
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission user:PostUsers
+ * @apiPermission userPostUsers
  * @apiDescription 添加用户
  *
  * @apiParam (Entity参数) {String} user_name           用户名
@@ -104,10 +104,10 @@ $user->post('/v1/users', 'postUsers');
 
 /**
  * @api {delete} /v1/users/:user_id 删除用户
- * @apiName user:DeleteUsersById
+ * @apiName userDeleteUsersById
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission user:DeleteUsersById
+ * @apiPermission userDeleteUsersById
  * @apiDescription 删除用户, 物理删除
  *
  * @apiParam (Path参数) {Integer} user_id         分类id
@@ -121,10 +121,10 @@ $user->delete('/v1/users/{user_id:[1-9]\d*}', 'deleteUsersById');
 
 /**
  * @api {put} /v1/users/deleted 批量删除用户
- * @apiName user:PutUsersDeleted
+ * @apiName userPutUsersDeleted
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission user:PutUsersDeleted
+ * @apiPermission userPutUsersDeleted
  * @apiDescription 批量删除用户, 软删除
  *
  * @apiParam (Entity参数) {Integer} user_counts               删除数量
