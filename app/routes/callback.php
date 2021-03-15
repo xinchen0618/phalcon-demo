@@ -13,7 +13,7 @@ $callback->setPrefix('/callback');
 
 /**
  * @api {post} /v1/order/alipay 订单支付宝支付回调
- * @apiName callback_post_order/alipay
+ * @apiName callback:PostOrderAlipay
  * @apiVersion 1.0.0
  * @apiGroup callback
  * @apiPermission none
