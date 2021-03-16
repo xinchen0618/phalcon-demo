@@ -41,7 +41,7 @@
   Module                                | 说明
   ---                                   |---
   [user](#api-user)                     | 用户API
-  [callback](#api-callback)             | 第三方回调, 比如微信支付回调
+  [callback](#api-callback)             | 第三方回调API, 比如微信支付回调
 
 - 版本
 
