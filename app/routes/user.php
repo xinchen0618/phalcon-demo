@@ -84,7 +84,7 @@ $user->get('/v1.1/users', 'getUsersByOffset');
  * @apiName userPostUsers
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission userPostUsers
+ * @apiPermission user:PostUsers
  * @apiDescription 添加用户
  *
  * @apiParam (Entity参数) {String} user_name           用户名
@@ -107,7 +107,7 @@ $user->post('/v1/users', 'postUsers');
  * @apiName userDeleteUsersById
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission userDeleteUsersById
+ * @apiPermission user:DeleteUsersById
  * @apiDescription 删除用户, 物理删除
  *
  * @apiParam (Path参数) {Integer} user_id         分类id
@@ -124,7 +124,7 @@ $user->delete('/v1/users/{user_id:[1-9]\d*}', 'deleteUsersById');
  * @apiName userPutUsersDeleted
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission userPutUsersDeleted
+ * @apiPermission user:PutUsersDeleted
  * @apiDescription 批量删除用户, 软删除
  *
  * @apiParam (Entity参数) {Integer} user_counts               删除数量
