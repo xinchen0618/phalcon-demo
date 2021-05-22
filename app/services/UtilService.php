@@ -43,7 +43,7 @@ class UtilService extends BaseService
                     if (strpos($valueType, '[') === 0) {
                         $valueType = json_decode($valueType, true);
                     }
-                    $filterParams[$paramKey] = self::filterParam($paramKey, $paramName, $json[$paramKey], $valueType, $allowEmpty);
+                    $filterParams[$paramKey] = self::filterParam($paramName, $json[$paramKey], $valueType, $allowEmpty);
                 }
             }
         }
@@ -55,8 +55,8 @@ class UtilService extends BaseService
      * 获取query参数
      * @param string $paramKey 键
      * @param string $paramName 键名
-     * @param mixed $valueType 值类型
-     * @param mixed $defaultValue 默认值
+     * @param mixed  $valueType 值类型
+     * @param mixed  $defaultValue 默认值
      * @return mixed
      */
     public static function getQuery(string $paramKey, string $paramName, $valueType, $defaultValue = null)
@@ -71,15 +71,14 @@ class UtilService extends BaseService
         }
 
         $allowEmpty = null !== $defaultValue;
-        return self::filterParam($paramKey, $paramName, $value, $valueType, $allowEmpty);
+        return self::filterParam($paramName, $value, $valueType, $allowEmpty);
     }
 
     /**
      * 验证参数
-     * @param string $paramKey
      * @param string $paramName
-     * @param mixed $paramValue
-     * @param mixed $valueType
+     * @param mixed  $paramValue
+     * @param mixed  $valueType
      *  [] - 枚举
      *  'int' - 整数
      *  '+int' - 正整数
@@ -92,10 +91,10 @@ class UtilService extends BaseService
      *  'latitude' - 纬度
      *  'image[]' - 图片数组, 返回Json字符串
      *  'image' - 图片
-     * @param bool $allowEmpty 是否允许为空
+     * @param bool   $allowEmpty 是否允许为空
      * @return mixed
      */
-    public static function filterParam(string $paramKey, string $paramName, $paramValue, $valueType, $allowEmpty = false)
+    public static function filterParam(string $paramName, $paramValue, $valueType, $allowEmpty = false)
     {
         // 枚举
         if (is_array($valueType)) {
@@ -240,12 +239,12 @@ class UtilService extends BaseService
         }
         /* 特定类型字符串end */
 
-        self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramKey}");  // 后端错误
+        self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramName}");  // 后端错误
     }
 
     /**
      * 错误返回并结束程序
-     * @param int $statusCode
+     * @param int    $statusCode
      * @param string $status
      * @param string $message
      */
@@ -260,7 +259,7 @@ class UtilService extends BaseService
 
     /**
      * 成功返回
-     * @param int $statusCode
+     * @param int   $statusCode
      * @param array $content
      * @return Response
      */
@@ -303,7 +302,7 @@ class UtilService extends BaseService
     /**
      * 频率限制
      * @param string $key
-     * @param int $interval
+     * @param int    $interval
      */
     public static function speedLimit(string $key = '', int $interval = 3): void
     {
@@ -390,7 +389,7 @@ class UtilService extends BaseService
      * @param string $src
      * @return bool
      */
-    public static function isImage(string $src):bool
+    public static function isImage(string $src): bool
     {
         $whitelistImageTypes = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP];  // 图片格式白名单, ImageType https://www.php.net/manual/en/function.exif-imagetype
         $mimeType = @exif_imagetype($src);
@@ -400,11 +399,11 @@ class UtilService extends BaseService
 
     /**
      * 入队及时队列任务
-     * @param string $serviceName       服务名
-     * @param string $methodName        服务静态方法名
-     * @param array  $params            静态方法参数
-     * @param bool   $transaction       是否开启事务
-     * @param string $queue             队列名
+     * @param string $serviceName 服务名
+     * @param string $methodName 服务静态方法名
+     * @param array  $params 静态方法参数
+     * @param bool   $transaction 是否开启事务
+     * @param string $queue 队列名
      * @return string|boolean
      */
     public static function enqueue(string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal')
@@ -419,12 +418,12 @@ class UtilService extends BaseService
 
     /**
      * 入队延迟队列任务
-     * @param int    $delay             延迟时间(秒)
-     * @param string $serviceName       服务名
-     * @param string $methodName        服务静态方法名
-     * @param array  $params            静态方法参数
-     * @param bool   $transaction       是否开启事务
-     * @param string $queue             队列名
+     * @param int    $delay 延迟时间(秒)
+     * @param string $serviceName 服务名
+     * @param string $methodName 服务静态方法名
+     * @param array  $params 静态方法参数
+     * @param bool   $transaction 是否开启事务
+     * @param string $queue 队列名
      * @return void
      */
     public static function enqueueIn(int $delay, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
@@ -439,12 +438,12 @@ class UtilService extends BaseService
 
     /**
      * 入队定时队列任务
-     * @param int    $timestamp         执行时间, 时间戳
-     * @param string $serviceName       服务名
-     * @param string $methodName        服务静态方法名
-     * @param array  $params            静态方法参数
-     * @param bool   $transaction       是否开启事务
-     * @param string $queue             队列名
+     * @param int    $timestamp 执行时间, 时间戳
+     * @param string $serviceName 服务名
+     * @param string $methodName 服务静态方法名
+     * @param array  $params 静态方法参数
+     * @param bool   $transaction 是否开启事务
+     * @param string $queue 队列名
      */
     public static function enqueueAt(int $timestamp, string $serviceName, string $methodName, array $params = [], bool $transaction = false, string $queue = 'universal'): void
     {
