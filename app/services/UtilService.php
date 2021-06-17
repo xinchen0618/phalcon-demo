@@ -40,9 +40,6 @@ class UtilService extends BaseService
                     self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
                 }
                 if (isset($json[$paramKey])) {
-                    if (strpos($valueType, '[') === 0) {
-                        $valueType = json_decode($valueType, true);
-                    }
                     $filterParams[$paramKey] = self::filterParam($paramName, $json[$paramKey], $valueType, $allowEmpty);
                 }
             }
@@ -79,27 +76,87 @@ class UtilService extends BaseService
      * @param string $paramName
      * @param mixed  $paramValue
      * @param mixed  $valueType
-     *  [] - 枚举
+     *  'literal' - 文字, 去除首尾空格
      *  'int' - 整数
      *  '+int' - 正整数
      *  '!-int' - 非负整数
      *  'string' - 字符串, 去除Tag, 去除首尾空格
-     *  'rich' - 富文本
-     *  'array' - 数组
-     *  'phone' - 电话号码
-     *  'longitude' - 经度
-     *  'latitude' - 纬度
-     *  'image[]' - 图片数组, 返回Json字符串
+     *  [] - 枚举
      *  'image' - 图片
+     *  'phone' - 国内电话号码
+     *  'email' - 邮件地址
+     *  'array' - 数组
+     *  'image[]' - 图片数组, 返回Json字符串
      * @param bool   $allowEmpty 是否允许为空
      * @return mixed
      */
-    public static function filterParam(string $paramName, $paramValue, $valueType, $allowEmpty = false)
+    public static function filterParam(string $paramName, $paramValue, $valueType, bool $allowEmpty = false)
     {
-        // 枚举
-        if (is_array($valueType)) {
+        /* 文字, 去除首尾空格 */
+        if ('literal' === $valueType) {
+            if (!(is_numeric($paramValue) || is_string($paramValue))) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+            $paramValue = trim($paramValue);
+            if ('' === $paramValue && !$allowEmpty) {
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+            }
+
+            return $paramValue;
+        }
+
+        /* 整型 */
+        if ('int' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);  // 转为字符串比较, 整型比较会有类型强转的问题
+            if ('' === $paramValue) {
+                return 0;  // 兼容, 空视为0
+            }
+
+            $paramValueInt = (int)$paramValue;
+            if ($paramValue != (string)$paramValueInt) {  // 兼容小数位0, 不可使用绝对等于判断
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $paramValueInt;
+        }
+
+        /* 正整型 */
+        if ('+int' === $valueType) {
+            $intValue = self::filterParam($paramName, $paramValue, 'int', $allowEmpty);
+            if ($intValue <= 0) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $intValue;
+        }
+
+        /* 非负整型 */
+        if ('!-int' === $valueType) {
+            $intValue = self::filterParam($paramName, $paramValue, 'int', $allowEmpty);
+            if ($intValue < 0) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $intValue;
+        }
+
+        /* 字符串, 去除Tag, 去除首尾空格 */
+        if ('string' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
+            $value = trim(strip_tags($paramValue));
+            if ('' === $value && !$allowEmpty) {
+                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+            }
+
+            return $value;
+        }
+
+        /* 枚举, 支持数字与字符串混合枚举 */
+        if (strpos($valueType, '[') === 0) {
+            $valueType = json_decode($valueType, true);
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
             foreach ($valueType as $valueItem) {
-                if (trim($paramValue) === (string)$valueItem) {
+                if ($paramValue == (string)$valueItem) {  // 兼容小数位0, 不可使用绝对等于判断
                     return $valueItem;
                 }
             }
@@ -107,26 +164,64 @@ class UtilService extends BaseService
             self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
         }
 
-        // 图片数组
-        if ('image[]' === $valueType) {
-            if (!is_array($paramValue)) {
+        /* 图片 */
+        if ('image' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
+            if ('' === $paramValue) {
+                return '';
+            }
+
+            if (!self::isImage($paramValue)) {
                 self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
-            if (!$paramValue && !$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
-            }
 
-            $cleanImages = [];
-            foreach ($paramValue as $image) {
-                if (self::isImage($image)) {
-                    $cleanImages[] = $image;
-                }
-            }
-
-            return $cleanImages ? json_encode($cleanImages) : '';
+            return $paramValue;
         }
 
-        // 数组
+        /* 国内电话号码 */
+        if ('phone' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
+            if ('' === $paramValue) {
+                return '';
+            }
+
+            if (!preg_match('/^1[3456789]\d{9}$/', $paramValue)
+                && !preg_match('/^(([0+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/', $paramValue)) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $paramValue;
+        }
+
+        /* 邮箱 */
+        if ('email' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
+            if ('' === $paramValue) {
+                return '';
+            }
+
+            if (!filter_var($paramValue, FILTER_VALIDATE_EMAIL)) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $paramValue;
+        }
+
+        /* 金额 */
+        if ('money' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
+            if ('' === $paramValue) {
+                return '0.00';
+            }
+
+            if (!is_numeric($paramValue) || $paramValue < 0 || $paramValue != sprintf('%.2F', $paramValue)) {  // 兼容小数位0, 不可使用绝对等于判断
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return sprintf('%.2F', $paramValue);
+        }
+
+        /* 数组 */
         if ('array' === $valueType) {
             if (!is_array($paramValue)) {
                 self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
@@ -138,106 +233,19 @@ class UtilService extends BaseService
             return $paramValue;
         }
 
-        /* 数字或字符串 */
-        if (!(is_numeric($paramValue) || is_string($paramValue))) {
-            self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-        }
-        $paramValue = trim($paramValue);
+        /* 图片数组, 返回json字符串 */
+        if ('image[]' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'array', $allowEmpty);
 
-        // 整型
-        if ('int' === substr($valueType, -3)) {
-            if ('' === $paramValue && !$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+            $cleanImages = [];
+            foreach ($paramValue as $image) {
+                if (self::isImage($image)) {
+                    $cleanImages[] = $image;
+                }
             }
 
-            $paramValue = '' === $paramValue ? 0 : $paramValue;  // 兼容, 空视为0
-            $paramValueInt = (int)$paramValue;
-            if ($paramValue != (string)$paramValueInt || ('+int' == $valueType && $paramValueInt <= 0) || ('!-int' == $valueType && $paramValueInt < 0)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return $paramValueInt;
+            return $cleanImages ? json_encode($cleanImages) : '';
         }
-
-        // 一般字符串
-        if ('string' === $valueType) {
-            $value = trim(strip_tags($paramValue));
-            if ('' === $value && !$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
-            }
-
-            return $value;
-        }
-
-        /* 特定类型字符串begin */
-        if ('' === $paramValue) {
-            if (!$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
-            }
-
-            return $paramValue;
-        }
-
-        // 富文本
-        if ('rich' === $valueType) {
-            return $paramValue;
-        }
-
-        // 国内电话号码
-        if ('phone' === $valueType) {
-            if (!preg_match('/^1[3456789]\d{9}$/', $paramValue)
-                && !preg_match('/^(([0+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/', $paramValue)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return $paramValue;
-        }
-
-        // 邮箱
-        if ('email' === $valueType) {
-            if (!filter_var($paramValue, FILTER_VALIDATE_EMAIL)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return $paramValue;
-        }
-
-        // 经度
-        if ('longitude' === $valueType) {
-            if (!is_numeric($paramValue) || $paramValue < -180 || $paramValue > 180) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return $paramValue;
-        }
-
-        // 纬度
-        if ('latitude' === $valueType) {
-            if (!is_numeric($paramValue) || $paramValue < -90 || $paramValue > 90) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return $paramValue;
-        }
-
-        // 金额
-        if ('money' === $valueType) {
-            if (!is_numeric($paramValue) || $paramValue < 0 || (string)$paramValue != sprintf('%.2F', $paramValue)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return sprintf('%.2F', $paramValue);
-        }
-
-        // 图片
-        if ('image' === $valueType) {
-            if (!self::isImage($paramValue)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
-            }
-
-            return $paramValue;
-        }
-        /* 特定类型字符串end */
 
         self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramName}");  // 后端错误
     }
