@@ -76,7 +76,7 @@ class UtilService extends BaseService
      * @param string $paramName
      * @param mixed  $paramValue
      * @param mixed  $valueType
-     *  'literal' - 文字, 去除首尾空格
+     *  'literal' - 文本, 去除首尾空格
      *  'int' - 整数
      *  '+int' - 正整数
      *  '!-int' - 非负整数
@@ -92,7 +92,7 @@ class UtilService extends BaseService
      */
     public static function filterParam(string $paramName, $paramValue, $valueType, bool $allowEmpty = false)
     {
-        /* 文字, 去除首尾空格 */
+        /* 文本, 去除首尾空格 */
         if ('literal' === $valueType) {
             if (!(is_numeric($paramValue) || is_string($paramValue))) {
                 self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
