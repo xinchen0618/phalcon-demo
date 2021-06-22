@@ -86,7 +86,7 @@ class UtilService extends BaseService
      *  'phone' - 国内电话号码
      *  'email' - 邮件地址
      *  'array' - 数组
-     *  'image[]' - 图片数组, 返回Json字符串
+     *  'images' - 图片数组, 返回Json字符串
      * @param bool   $allowEmpty 是否允许为空
      * @return mixed
      */
@@ -234,7 +234,7 @@ class UtilService extends BaseService
         }
 
         /* 图片数组, 返回json字符串 */
-        if ('image[]' === $valueType) {
+        if ('images' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'array', $allowEmpty);
 
             $cleanImages = [];
