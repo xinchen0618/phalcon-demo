@@ -40,6 +40,9 @@ class UtilService extends BaseService
                     self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
                 }
                 if (isset($json[$paramKey])) {
+                    if (strpos($valueType, '[') === 0) {
+                        $valueType = json_decode($valueType, true);
+                    }
                     $filterParams[$paramKey] = self::filterParam($paramName, $json[$paramKey], $valueType, $allowEmpty);
                 }
             }
@@ -152,7 +155,7 @@ class UtilService extends BaseService
         }
 
         /* 枚举, 支持数字与字符串混合枚举 */
-        if (strpos($valueType, '[') === 0) {
+        if (is_array($valueType)) {
             $valueType = json_decode($valueType, true);
             $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
             foreach ($valueType as $valueItem) {
