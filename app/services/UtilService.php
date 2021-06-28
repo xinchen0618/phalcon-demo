@@ -90,8 +90,11 @@ class UtilService extends BaseService
      *  'email' - 邮件地址
      *  'float' - 浮点型, 去除小数位0, 返回字符串格式
      *  'money' - 金额
+     *  'longitude' - 经度
+     *  'latitude' - 纬度
      *  'array' - 数组
      *  'images' - 图片数组, 返回Json字符串
+     *  'image[]' - 图片数组, 返回数组
      * @param bool   $allowEmpty 是否允许为空
      * @return mixed
      */
@@ -230,13 +233,32 @@ class UtilService extends BaseService
         /* 金额 */
         if ('money' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
-
             $paramValueMoney = sprintf('%.2F', $paramValue);
             if ($paramValue < 0 || $paramValue != $paramValueMoney) {  // 兼容小数位0, 不可使用绝对等于判断
                 self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
             return $paramValueMoney;
+        }
+
+        /* 经度 */
+        if ('longitude' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
+            if ($paramValue < -180 || $paramValue > 180) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $paramValue;
+        }
+
+        /* 纬度 */
+        if ('latitude' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
+            if ($paramValue < -90 || $paramValue > 90) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $paramValue;
         }
 
         /* 数组 */
@@ -251,8 +273,8 @@ class UtilService extends BaseService
             return $paramValue;
         }
 
-        /* 图片数组, 返回json字符串 */
-        if ('images' === $valueType) {
+        /* 图片数组, images-返回json字符串, image[]-返回数组 */
+        if ('images' === $valueType || 'image[]' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'array', $allowEmpty);
 
             $cleanImages = [];
@@ -262,7 +284,14 @@ class UtilService extends BaseService
                 }
             }
 
-            return $cleanImages ? json_encode($cleanImages) : '';
+            if (!$cleanImages && !$allowEmpty) {
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            if ('images' === $valueType) {
+                return $cleanImages ? json_encode($cleanImages) : '';
+            }
+            return $cleanImages;
         }
 
         self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramName}");  // 后端错误
