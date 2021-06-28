@@ -88,6 +88,8 @@ class UtilService extends BaseService
      *  'image' - 图片
      *  'phone' - 国内电话号码
      *  'email' - 邮件地址
+     *  'float' - 浮点型, 去除小数位0, 返回字符串格式
+     *  'money' - 金额
      *  'array' - 数组
      *  'images' - 图片数组, 返回Json字符串
      * @param bool   $allowEmpty 是否允许为空
@@ -210,18 +212,31 @@ class UtilService extends BaseService
             return $paramValue;
         }
 
-        /* 金额 */
-        if ('money' === $valueType) {
+        /* 浮点型, 去除小数位0, 返回字符串格式*/
+        if ('float' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
             if ('' === $paramValue) {
-                return '0.00';
+                return '0';
             }
 
-            if (!is_numeric($paramValue) || $paramValue < 0 || $paramValue != sprintf('%.2F', $paramValue)) {  // 兼容小数位0, 不可使用绝对等于判断
+            $paramValueFloat = sprintf('%g', $paramValue);
+            if ($paramValue != $paramValueFloat) {  // 兼容小数位0, 不可使用绝对等于判断
                 self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
-            return sprintf('%.2F', $paramValue);
+            return $paramValueFloat;
+        }
+
+        /* 金额 */
+        if ('money' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
+
+            $paramValueMoney = sprintf('%.2F', $paramValue);
+            if ($paramValue < 0 || $paramValue != $paramValueMoney) {  // 兼容小数位0, 不可使用绝对等于判断
+                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            }
+
+            return $paramValueMoney;
         }
 
         /* 数组 */
