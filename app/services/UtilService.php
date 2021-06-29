@@ -93,8 +93,8 @@ class UtilService extends BaseService
      *  'longitude' - 经度
      *  'latitude' - 纬度
      *  'array' - 数组
-     *  'images' - 图片数组, 返回Json字符串
      *  'image[]' - 图片数组, 返回数组
+     *  'images' - 图片数组, 返回Json字符串
      * @param bool   $allowEmpty 是否允许为空
      * @return mixed
      */
@@ -273,8 +273,8 @@ class UtilService extends BaseService
             return $paramValue;
         }
 
-        /* 图片数组, images-返回json字符串, image[]-返回数组 */
-        if ('images' === $valueType || 'image[]' === $valueType) {
+        /* 图片数组, 返回数组 */
+        if ('image[]' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'array', $allowEmpty);
 
             $cleanImages = [];
@@ -288,10 +288,14 @@ class UtilService extends BaseService
                 self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
             }
 
-            if ('images' === $valueType) {
-                return $cleanImages ? json_encode($cleanImages) : '';
-            }
             return $cleanImages;
+        }
+
+        /* 图片数组, 返回json字符串 */
+        if ('images' === $valueType) {
+            $paramValue = self::filterParam($paramName, $paramValue, 'image[]', $allowEmpty);
+
+            return $paramValue ? json_encode($paramValue) : '';
         }
 
         self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramName}");  // 后端错误
