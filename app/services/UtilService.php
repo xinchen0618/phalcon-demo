@@ -449,10 +449,11 @@ class UtilService extends BaseService
      */
     public static function isImage(string $src): bool
     {
-        $whitelistImageTypes = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP];  // 图片格式白名单, ImageType https://www.php.net/manual/en/function.exif-imagetype
-        $mimeType = @exif_imagetype($src);
-
-        return in_array($mimeType, $whitelistImageTypes);
+        return false !== stripos($src, 'http://') || false !== stripos($src, 'https://');
+//        $whitelistImageTypes = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP];  // 图片格式白名单, ImageType https://www.php.net/manual/en/function.exif-imagetype
+//        $mimeType = @exif_imagetype($src);
+//
+//        return in_array($mimeType, $whitelistImageTypes);
     }
 
     /**
