@@ -95,7 +95,6 @@ class UtilService extends BaseService
      *  'longitude' - 经度
      *  'latitude' - 纬度
      *  'array' - 数组
-
      * @param bool   $allowEmpty 是否允许为空
      * @return mixed
      */
