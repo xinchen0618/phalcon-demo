@@ -161,7 +161,6 @@ class UtilService extends BaseService
 
         /* 枚举, 支持数字与字符串混合枚举 */
         if (is_array($valueType)) {
-            $valueType = json_decode($valueType, true);
             $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
             foreach ($valueType as $valueItem) {
                 if ($paramValue == (string)$valueItem) {  // 兼容小数位0, 不可使用绝对等于判断
