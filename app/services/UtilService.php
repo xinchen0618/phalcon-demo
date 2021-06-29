@@ -88,7 +88,7 @@ class UtilService extends BaseService
      *  'image' - 图片
      *  'image[]' - 图片数组, 返回数组
      *  'images' - 图片数组, 返回Json字符串
-     *  'float' - 浮点型, 去除小数位0, 返回字符串格式
+     *  'float' - 浮点型, 去除尾部小数位0, 返回字符串格式
      *  'money' - 金额
      *  'phone' - 国内电话号码
      *  'email' - 邮件地址
@@ -210,7 +210,7 @@ class UtilService extends BaseService
             return $paramValue ? json_encode($paramValue) : '';
         }
 
-        /* 浮点型, 去除小数位0, 返回字符串格式*/
+        /* 浮点型, 去除尾部小数位0, 返回字符串格式*/
         if ('float' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
             if ('' === $paramValue) {
