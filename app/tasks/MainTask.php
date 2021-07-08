@@ -51,16 +51,6 @@ class MainTask extends Task
     }
 
     /**
-     * 查询key
-     */
-    public function getKeyAction(): void
-    {
-        $key = 'user:15866083251';
-        $value = $this->redis->get($key);
-        var_export($value);
-    }
-
-    /**
      * 手动执行队列任务
      * @param string $service
      * @param string $method
@@ -177,10 +167,4 @@ class MainTask extends Task
         }
     }
 
-    public function getUsersAction(): void
-    {
-        $sql = 'SELECT * FROM t_users ORDER BY position LIMIT 5';
-        $users = $this->db->fetchAll($sql);
-        var_export($users);
-    }
 }

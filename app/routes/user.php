@@ -119,23 +119,4 @@ $user->post('/v1/users', 'postUsers');
  */
 $user->delete('/v1/users/{user_id:[1-9]\d*}', 'deleteUsersById');
 
-/**
- * @api {put} /v1/users/deleted 批量删除用户
- * @apiName userPutUsersDeleted
- * @apiVersion 1.0.0
- * @apiGroup user
- * @apiPermission user:PutUsersDeleted
- * @apiDescription 批量删除用户, 软删除
- *
- * @apiParam (Entity参数) {Integer} user_counts               删除数量
- * @apiParamExample {json} 请求实体示例
- *  {
- *      "user_counts": 100
- *  }
- *
- * @apiSuccessExample 成功响应示例
- *  HTTP/1.1 204 No Content
- */
-$user->put('/v1/users/deleted', 'putUsersDeleted');
-
 $app->mount($user);

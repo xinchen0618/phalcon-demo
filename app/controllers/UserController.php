@@ -39,15 +39,18 @@ class UserController extends Controller
 
     public function postUsers(): Response
     {
-        UtilService::speedLimit();
+//        UtilService::speedLimit();
 
-        $json = UtilService::getJsonBody(['user_name:用户名:string:+']);
+        $json = UtilService::getJsonBody(['counts:数量:+int:*']);
+        $counts = $json['counts'] ?? 100;
 
-        $this->db->begin();
+//        $this->db->begin();
+        for ($i = 0; $i < $counts; $i++) {
+            $user = ["user_name" => random_int(111111111, 999999999)];
+            $userId = UserService::postUsers($user);
+        }
 
-        $userId = UserService::postUsers($json);
-
-        $this->db->commit();
+//        $this->db->commit();
 
         return UtilService::successResponse(200, ['user_id' => $userId]);
     }
@@ -61,14 +64,5 @@ class UserController extends Controller
         $this->db->commit();
 
         return UtilService::uniformResponse($result);
-    }
-
-    public function putUsersDeleted(): Response
-    {
-        $json = UtilService::getJsonBody(['user_counts:删除数量:+int:+']);
-
-        $this->db->updateAsDict('t_users', ['is_deleted' => 1, 'deleted_time' => time()], "user_id <= {$json['user_counts']} AND is_deleted = 0");
-
-        return UtilService::successResponse(204);
     }
 }

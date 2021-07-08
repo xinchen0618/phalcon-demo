@@ -113,14 +113,14 @@ try {
     /**
      * 请求来源校验
      */
-    $moduleWhitelist = $di->get('config')->moduleWhitelist->toArray();
-    if (empty($module) || !in_array($module, $moduleWhitelist)) {
-        $source = $di->get('request')->getHeader('X-Source');
-        $sourceWhitelist = $di->get('config')->sourceWhitelist->toArray();
-        if (!$source || !isset($sourceWhitelist[$source])) {
-            UtilService::errorResponse(400, 'InvalidSource', '无效请求来源');
-        }
-    }
+//    $moduleWhitelist = $di->get('config')->moduleWhitelist->toArray();
+//    if (empty($module) || !in_array($module, $moduleWhitelist)) {
+//        $source = $di->get('request')->getHeader('X-Source');
+//        $sourceWhitelist = $di->get('config')->sourceWhitelist->toArray();
+//        if (!$source || !isset($sourceWhitelist[$source])) {
+//            UtilService::errorResponse(400, 'InvalidSource', '无效请求来源');
+//        }
+//    }
 
     /**
      * Slow api
