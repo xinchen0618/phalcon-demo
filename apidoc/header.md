@@ -85,9 +85,9 @@
   ---               |---                    |---
   500               | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详情)
   404               | ResourceNotFound      | 您请求的资源不存在 (请求不存在的API返回此错误)
-  400               | InvalidSource         | 无效请求来源
-  400               | InvalidParam          | 参数不正确 (类型校验不通过, 见message详情)
-  400               | EmptyParam            | 参数不得为空 (缺少必填参数或必填参数传空值, 见message详情)
+  400               | SourceInvalid         | 无效请求来源
+  400               | ParamInvalid          | 参数不正确 (类型校验不通过, 见message详情)
+  400               | ParamEmpty            | 参数不得为空 (缺少必填参数或必填参数传空值, 见message详情)
   429               | SpeedLimit            | 手快了, 请稍后~~
 
 - 业务错误码

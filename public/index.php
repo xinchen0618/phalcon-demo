@@ -118,7 +118,7 @@ try {
 //        $source = $di->get('request')->getHeader('X-Source');
 //        $sourceWhitelist = $di->get('config')->sourceWhitelist->toArray();
 //        if (!$source || !isset($sourceWhitelist[$source])) {
-//            UtilService::errorResponse(400, 'InvalidSource', '无效请求来源');
+//            UtilService::errorResponse(400, 'SourceInvalid', '无效请求来源');
 //        }
 //    }
 

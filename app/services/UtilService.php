@@ -37,7 +37,7 @@ class UtilService extends BaseService
                 }
 
                 if ($required && !isset($json[$paramKey])) {
-                    self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+                    self::errorResponse(400, 'ParamEmpty', "{$paramName}不得为空");
                 }
                 if (isset($json[$paramKey])) {
                     if (strpos($valueType, '[') === 0) {
@@ -67,7 +67,7 @@ class UtilService extends BaseService
                 return $defaultValue;
             }
 
-            self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+            self::errorResponse(400, 'ParamEmpty', "{$paramName}不得为空");
         }
 
         $allowEmpty = null !== $defaultValue;
@@ -103,11 +103,11 @@ class UtilService extends BaseService
         /* 文本, 去除首尾空格 */
         if ('literal' === $valueType) {
             if (!(is_numeric($paramValue) || is_string($paramValue))) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
             $paramValue = trim($paramValue);
             if ('' === $paramValue && !$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+                self::errorResponse(400, 'ParamEmpty', "{$paramName}不得为空");
             }
 
             return $paramValue;
@@ -122,7 +122,7 @@ class UtilService extends BaseService
 
             $paramValueInt = (int)$paramValue;
             if ($paramValue != (string)$paramValueInt) {  // 兼容小数位0, 不可使用绝对等于判断
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValueInt;
@@ -132,7 +132,7 @@ class UtilService extends BaseService
         if ('+int' === $valueType) {
             $intValue = self::filterParam($paramName, $paramValue, 'int', $allowEmpty);
             if ($intValue <= 0) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $intValue;
@@ -142,7 +142,7 @@ class UtilService extends BaseService
         if ('!-int' === $valueType) {
             $intValue = self::filterParam($paramName, $paramValue, 'int', $allowEmpty);
             if ($intValue < 0) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $intValue;
@@ -153,7 +153,7 @@ class UtilService extends BaseService
             $paramValue = self::filterParam($paramName, $paramValue, 'literal', $allowEmpty);
             $value = trim(strip_tags($paramValue));
             if ('' === $value && !$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+                self::errorResponse(400, 'ParamEmpty', "{$paramName}不得为空");
             }
 
             return $value;
@@ -168,7 +168,7 @@ class UtilService extends BaseService
                 }
             }
 
-            self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+            self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
         }
 
         /* 图片 */
@@ -179,7 +179,7 @@ class UtilService extends BaseService
             }
 
             if (!self::isImage($paramValue)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -197,7 +197,7 @@ class UtilService extends BaseService
             }
 
             if (!$cleanImages && !$allowEmpty) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $cleanImages;
@@ -219,7 +219,7 @@ class UtilService extends BaseService
 
             $paramValueFloat = sprintf('%g', $paramValue);
             if ($paramValue != $paramValueFloat) {  // 兼容小数位0, 不可使用绝对等于判断
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValueFloat;
@@ -230,7 +230,7 @@ class UtilService extends BaseService
             $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
             $paramValueMoney = sprintf('%.2F', $paramValue);
             if ($paramValue < 0 || $paramValue != $paramValueMoney) {  // 兼容小数位0, 不可使用绝对等于判断
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValueMoney;
@@ -245,7 +245,7 @@ class UtilService extends BaseService
 
             if (!preg_match('/^1[3456789]\d{9}$/', $paramValue)
                 && !preg_match('/^(([0+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/', $paramValue)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -259,7 +259,7 @@ class UtilService extends BaseService
             }
 
             if (!filter_var($paramValue, FILTER_VALIDATE_EMAIL)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -269,7 +269,7 @@ class UtilService extends BaseService
         if ('longitude' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
             if ($paramValue < -180 || $paramValue > 180) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -279,7 +279,7 @@ class UtilService extends BaseService
         if ('latitude' === $valueType) {
             $paramValue = self::filterParam($paramName, $paramValue, 'float', $allowEmpty);
             if ($paramValue < -90 || $paramValue > 90) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
 
             return $paramValue;
@@ -288,16 +288,16 @@ class UtilService extends BaseService
         /* 数组 */
         if ('array' === $valueType) {
             if (!is_array($paramValue)) {
-                self::errorResponse(400, 'InvalidParam', "{$paramName}不正确");
+                self::errorResponse(400, 'ParamInvalid', "{$paramName}不正确");
             }
             if (!$paramValue && !$allowEmpty) {
-                self::errorResponse(400, 'EmptyParam', "{$paramName}不得为空");
+                self::errorResponse(400, 'ParamEmpty', "{$paramName}不得为空");
             }
 
             return $paramValue;
         }
 
-        self::errorResponse(400, 'UndefinedValueType', "未知数据类型: {$paramName}");  // 后端错误
+        self::errorResponse(400, 'ValueTypeUndefined', "未知数据类型: {$paramName}");  // 后端错误
     }
 
     /**
