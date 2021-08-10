@@ -513,4 +513,18 @@ class UtilService extends BaseService
 
         ResqueScheduler::enqueueAt($timestamp, $queue, 'QueueJob', [$serviceName, $methodName, $params, $transaction]);
     }
+
+    /**
+     * 斐波那契数列
+     * @param int $n
+     * @return int
+     */
+    public static function fib(int $n): int
+    {
+        if (0 === $n || 1 === $n) {
+            return $n;
+        }
+
+        return self::fib($n - 1) + self::fib($n - 2);
+    }
 }

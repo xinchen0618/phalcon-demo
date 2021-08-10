@@ -34,8 +34,8 @@ class QueueJob
             error_log($e->getMessage() . " \n" . $e->getTraceAsString() . " \n");
 
             $this->args[4] = isset($this->args[4]) ? $this->args[4] + 1 : 1;    // retriedCount
-            if ($this->args[4] <= 24) {   // 持续约25小时
-                ResqueScheduler::enqueueIn($this->args[4] ** 3, $this->queue, 'QueueJob', $this->args);
+            if ($this->args[4] <= 23) {   // 持续约20小时
+                ResqueScheduler::enqueueIn(UtilService::fib($this->args[4]), $this->queue, 'QueueJob', $this->args);
             } else {
                 unset($this->args[4]);
                 error_log('队列任务执行失败: ' . var_export($this->args, true) . " \n");
