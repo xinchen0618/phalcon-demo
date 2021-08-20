@@ -67,21 +67,21 @@
 
 ### 错误码
 
-服务器错误统一返回500, 客户端错误返回4xx. 返回实体包含两个字段: status-错误状态, message-错误描述.
+服务器错误统一返回500, 客户端错误返回4xx. 返回实体包含两个字段: code-错误码, message-错误描述.
 
 - Response示例
 
   ```
   HTTP/1.1 404 Not Found
   {
-      "status": "ResourceNotFound",
+      "code": "ResourceNotFound",
       "message": "您请求的资源不存在"
   }
   ```
 
 - 公共错误码
 
-  Http Status Code  | status                | message
+  HTTP Status Code  | code                  | message
   ---               |---                    |---
   500               | Exception             | 服务异常, 请稍后重试 (非生产环境为异常详情)
   404               | ResourceNotFound      | 您请求的资源不存在 (请求不存在的API返回此错误)

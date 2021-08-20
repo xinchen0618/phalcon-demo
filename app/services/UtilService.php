@@ -303,13 +303,13 @@ class UtilService extends BaseService
     /**
      * 错误返回并结束程序
      * @param int    $statusCode
-     * @param string $status
+     * @param string $code
      * @param string $message
      */
-    public static function errorResponse(int $statusCode, string $status, string $message): void
+    public static function errorResponse(int $statusCode, string $code, string $message): void
     {
         self::di('response')->setStatusCode($statusCode)->setJsonContent([
-            'status' => $status,
+            'code' => $code,
             'message' => $message
         ])->send();
         exit;
@@ -335,7 +335,7 @@ class UtilService extends BaseService
      * 返回
      * @param array $result
      *      成功返回-[int $statusCode, array $content = []],
-     *      错误返回-[int $statusCode, string $status, string $message]
+     *      错误返回-[int $statusCode, string $code, string $message]
      * @return Response
      */
     public static function uniformResponse(array $result): Response
@@ -343,7 +343,7 @@ class UtilService extends BaseService
         /* 错误返回 */
         if ($result[0] >= 400) {
             return self::di('response')->setStatusCode($result[0])->setJsonContent([
-                'status' => $result[1],
+                'code' => $result[1],
                 'message' => $result[2]
             ]);
         }
