@@ -53,7 +53,7 @@
 
   ```
   // 生成文档
-  apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc
+  apidoc -i /path_to_project/ -o /path_to_apidoc_html/ -c /path_to_project/apidoc/apidoc.json
   ```
 
 ### Queue
