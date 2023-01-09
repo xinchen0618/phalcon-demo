@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "apiDoc basic example",
   "title": "Custom apiDoc browser title",
   "header": {
@@ -8,10 +8,8 @@
     "filename": "apidoc/header.md"
   },
   "template": {
-    "withGenerator": false
+    "withGenerator": false,
+    "forceLanguage": "zh"
   },
-  "order": [
-    "user",
-    "callback"
-  ]
+  "order": []
 }

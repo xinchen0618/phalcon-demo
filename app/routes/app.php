@@ -3,7 +3,7 @@
 /**
  * Add your routes here
  */
-$app->get('/', function () use($app) {
+$app->get('/', function () use ($app) {
     return $app->response->setStatusCode(200)->setJsonContent(
         [
             'status' => 'OK',
@@ -15,7 +15,7 @@ $app->get('/', function () use($app) {
 /**
  * Not found handler
  */
-$app->notFound(function () use($app) {
+$app->notFound(function () use ($app) {
     return $app->response->setStatusCode(404)->setJsonContent(
         [
             'status' => 'ResourceNotFound',

@@ -11,15 +11,6 @@ class UserController extends Controller
 {
     public function getUsers(): Response
     {
-        // cache
-//        $page = UtilService::getQuery('page', '页码', '+int', 1);
-//        $perPage = UtilService::getQuery('per_page', '页大小', '+int', 12);
-//        $key = sprintf(REDIS_USERS, md5($page . $perPage));
-//        $result = $this->cache->get($key);
-//        if ($result) {
-//            return UtilService::successResponse(200, unserialize($result));
-//        }
-
         $result = UtilService::getPageItems([
             'select' => 'u.user_id, u.user_name, u.money, u.created_at, u.updated_at, uc.counts',
             'from' => 't_users AS u JOIN t_user_counts AS uc ON u.user_id = uc.user_id',
@@ -27,14 +18,7 @@ class UserController extends Controller
             'orderBy' => 'u.user_id DESC'
         ]);
 
-//        $this->cache->set($key, serialize($result), 60);
-
         return UtilService::successResponse(200, $result);
-    }
-
-    public function getUsersByOffset(): Response
-    {
-        return UtilService::successResponse(200, ['next_offset' => -1, 'items' => []]);
     }
 
     public function postUsers(): Response

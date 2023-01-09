@@ -9,15 +9,15 @@ use Phalcon\Mvc\Micro\Collection as MicroCollection;
 
 $user = new MicroCollection();
 $user->setHandler(new UserController());
-$user->setPrefix('/user');
+$user->setPrefix('/user/v1');
 
 /**
- * @api {get} /v1/users 获取用户列表[Deprecated]
+ * @api {get} /users 获取用户列表
  * @apiName userGetUsers
  * @apiVersion 1.0.0
  * @apiGroup user
- * @apiPermission 用户登录
- * @apiDescription 获取用户列表, page/per_page分页方式
+ * @apiPermission token
+ * @apiDescription 获取用户列表
  *
  * @apiDeprecated
  *
@@ -47,40 +47,10 @@ $user->setPrefix('/user');
  *      ]
  *  }
  */
-$user->get('/v1/users', 'getUsers');
+$user->get('/users', 'getUsers');
 
 /**
- * @api {get} /v1.1/users 获取用户列表
- * @apiName userGetUsers
- * @apiVersion 1.1.0
- * @apiGroup user
- * @apiPermission 用户登录
- * @apiDescription 获取用户列表, offset/limit分页方式
- *
- * @apiParam (Query参数) {String}   [q='']        搜索, 昵称
- * @apiParam (Query参数) {Integer}  [offset=0]    起始id, 0-首页
- * @apiParam (Query参数) {Integer}  [limit=12]    返回记录数
- *
- * @apiSuccess {Integer}    next_offset         下一页起始id, -1-没有下一页了
- * @apiSuccess {Object[]}   items               列表
- * @apiSuccess {Integer}    items.user_id       用户id
- * @apiSuccess {String}     items.nickname      昵称
- * @apiSuccessExample 成功响应示例
- *  HTTP/1.1 200 OK
- *  {
- *      "next_offset": 1,
- *      "items": [
- *          {
- *              "user_id": 988,
- *              "nickname": "小乔"
- *          }
- *      ]
- *  }
- */
-$user->get('/v1.1/users', 'getUsersByOffset');
-
-/**
- * @api {post} /v1/users 添加用户
+ * @api {post} /users 添加用户
  * @apiName userPostUsers
  * @apiVersion 1.0.0
  * @apiGroup user
@@ -100,10 +70,10 @@ $user->get('/v1.1/users', 'getUsersByOffset');
  *      "user_id": 3
  *  }
  */
-$user->post('/v1/users', 'postUsers');
+$user->post('/users', 'postUsers');
 
 /**
- * @api {delete} /v1/users/:user_id 删除用户
+ * @api {delete} /users/:user_id 删除用户
  * @apiName userDeleteUsersById
  * @apiVersion 1.0.0
  * @apiGroup user

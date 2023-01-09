@@ -13,7 +13,7 @@ class MainTask extends Task
      */
     public function setKeyAction(): void
     {
-        for ($i =0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $no = random_int(10000000000, 99999999999);
             $key = "user:{$no}";
             $this->redis->set($key, $no, 86400);
@@ -41,7 +41,7 @@ class MainTask extends Task
 
             // Redis may return empty results, so protect against that
             if ($arr_keys !== FALSE) {
-                foreach($arr_keys as $str_key) {
+                foreach ($arr_keys as $str_key) {
                     echo "Here is a key: $str_key\n";
                 }
             }
